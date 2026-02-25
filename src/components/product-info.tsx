@@ -68,7 +68,7 @@ export default function ProductInfo({product, setSelectImage}: {product: Product
     }
 
     const handleColorChange = (color: string) => {
-        const index = product.images.findIndex(img => img.includes(color.toLowerCase().trim()));
+        const index = product.images.findIndex(img => img.includes(color.replace(/\s/g, '').toLowerCase()));
         if (index !== -1) {
             setSelectImage(index);
         }

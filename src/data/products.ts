@@ -92,7 +92,7 @@ export const products: Product[] = [
         slug: "sweater-classic",
         images: [
             '/product/cream-sweater.webp',
-            '/product/sky-sweater.webp',
+            '/product/skyblue-sweater.webp',
             '/product/black-sweater.webp',
         ],
         details: [
