@@ -8,6 +8,7 @@ import { Product, products } from "@/data/products";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useState } from "react";
 
 
 export default function ProductPage() {
@@ -15,6 +16,7 @@ export default function ProductPage() {
     const { slug } = params;
 
     const product: Product | undefined = products.find((p) => p.slug === slug);
+    const [selectImage, setSelectImage] = useState(0)
 
     if (!product) {
         return (
@@ -40,14 +42,14 @@ export default function ProductPage() {
 
             <main className="flex-1 max-w-7xl mx-auto w-full px-6">
                 <section className="mx-auto py-10 grid gap-6 md:grid-cols-2 items-start">
-                    <ProductGallery images={product.images} />
+                    <ProductGallery images={product.images} selectImage={selectImage} setSelectImage={setSelectImage} />
                     <div className="flex flex-col gap-2 min-h-full">
                         <div className="flex flex-col gap-2">
                             <h1 className="font-serif text-4xl font-light tracking-tight ">{product.name}</h1>
                             <p className="text-2xl font-medium text-gray-600">${product.price.toFixed(2)}</p>
                             <p className="text-base text-muted-foreground">{product.description}</p>
                         </div>
-                        <ProductInfo product={product} />
+                        <ProductInfo product={product} setSelectImage={setSelectImage} />
                     </div>
                 </section>
                 <section className="mx-auto py-10 flex flex-col gap-4 items-start border-t w-full">

@@ -35,8 +35,8 @@ export const products: Product[] = [
         category: 'T-Shirts',
         images: [
             '/product/shirt-white.webp',
-            '/product/shirt-green.webp',
             '/product/shirt-black.webp',
+            '/product/shirt-green.webp',
         ],
         details: [
             '100% Organic Cotton',
@@ -119,10 +119,10 @@ const variants: ProductVariant[] = [
   { id: '8', productId: '1', color: { name: 'Black', value: '#000000' }, size: 'XL', stock: 1, sku: 'LUM-TEE-BLK-XL', image: '/product/shirt-black.webp' },
 
   // BROWN
-  { id: '9', productId: '1', color: { name: 'Brown', value: '#463A2E' }, size: 'S', stock: 3, sku: 'LUM-TEE-BROW-S', image: '/product/shirt-green.webp' },
-  { id: '10', productId: '1', color: { name: 'Brown', value: '#463A2E' }, size: 'M', stock: 2, sku: 'LUM-TEE-BROW-M', image: '/product/shirt-green.webp' },
-  { id: '11', productId: '1', color: { name: 'Brown', value: '#463A2E' }, size: 'L', stock: 1, sku: 'LUM-TEE-BROW-L', image: '/product/shirt-green.webp' },
-  { id: '12', productId: '1', color: { name: 'Brown', value: '#463A2E' }, size: 'XL', stock: 0, sku: 'LUM-TEE-BROW-XL', image: '/product/shirt-green.webp' },
+  { id: '9', productId: '1', color: { name: 'Green', value: '#393A2A' }, size: 'S', stock: 3, sku: 'LUM-TEE-BROW-S', image: '/product/shirt-green.webp' },
+  { id: '10', productId: '1', color: { name: 'Green', value: '#393A2A' }, size: 'M', stock: 2, sku: 'LUM-TEE-BROW-M', image: '/product/shirt-green.webp' },
+  { id: '11', productId: '1', color: { name: 'Green', value: '#393A2A' }, size: 'L', stock: 1, sku: 'LUM-TEE-BROW-L', image: '/product/shirt-green.webp' },
+  { id: '12', productId: '1', color: { name: 'Green', value: '#393A2A' }, size: 'XL', stock: 0, sku: 'LUM-TEE-BROW-XL', image: '/product/shirt-green.webp' },
 
   // PRODUCT 2 – SHIRT COUTURE
   // BROWN
@@ -165,10 +165,10 @@ const variants: ProductVariant[] = [
   { id: '39', productId: '4', color: { name: 'Cream', value: '#F5F5DC' }, size: 'L', stock: 2, sku: 'LUM-SWT-CRM-L', image: '/product/cream-sweater.webp' },
   { id: '40', productId: '4', color: { name: 'Cream', value: '#F5F5DC' }, size: 'XL', stock: 1, sku: 'LUM-SWT-CRM-XL', image: '/product/cream-sweater.webp' },
 
-  { id: '41', productId: '4', color: { name: 'Sky Blue', value: '#B0C4DE' }, size: 'S', stock: 4, sku: 'LUM-SWT-SKY-S', image: '/product/sky-sweater.webp' },
-  { id: '42', productId: '4', color: { name: 'Sky Blue', value: '#B0C4DE' }, size: 'M', stock: 3, sku: 'LUM-SWT-SKY-M', image: '/product/sky-sweater.webp' },
-  { id: '43', productId: '4', color: { name: 'Sky Blue', value: '#B0C4DE' }, size: 'L', stock: 1, sku: 'LUM-SWT-SKY-L', image: '/product/sky-sweater.webp' },
-  { id: '44', productId: '4', color: { name: 'Sky Blue', value: '#B0C4DE' }, size: 'XL', stock: 0, sku: 'LUM-SWT-SKY-XL', image: '/product/sky-sweater.webp' },
+  { id: '41', productId: '4', color: { name: 'Sky Blue', value: '#B0C4DE' }, size: 'S', stock: 4, sku: 'LUM-SWT-SKY-S', image: '/product/skyblue-sweater.webp' },
+  { id: '42', productId: '4', color: { name: 'Sky Blue', value: '#B0C4DE' }, size: 'M', stock: 3, sku: 'LUM-SWT-SKY-M', image: '/product/skyblue-sweater.webp' },
+  { id: '43', productId: '4', color: { name: 'Sky Blue', value: '#B0C4DE' }, size: 'L', stock: 1, sku: 'LUM-SWT-SKY-L', image: '/product/skyblue-sweater.webp' },
+  { id: '44', productId: '4', color: { name: 'Sky Blue', value: '#B0C4DE' }, size: 'XL', stock: 0, sku: 'LUM-SWT-SKY-XL', image: '/product/skyblue-sweater.webp' },
 
   { id: '45', productId: '4', color: { name: 'Black', value: '#000000' }, size: 'S', stock: 6, sku: 'LUM-SWT-BLK-S', image: '/product/black-sweater.webp' },
   { id: '46', productId: '4', color: { name: 'Black', value: '#000000' }, size: 'M', stock: 5, sku: 'LUM-SWT-BLK-M', image: '/product/black-sweater.webp' },

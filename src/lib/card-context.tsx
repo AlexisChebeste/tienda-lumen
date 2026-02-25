@@ -12,11 +12,15 @@ export interface CartItem {
   size: string;
   sku: string;
   quantity: number;
+  stock: number;
 }
 
 interface CartContextType {
   items: CartItem[]
-  addItem: (item: Omit<CartItem, "quantity">, totalAdd: number) => void  
+  addItem: (
+    item: Omit<CartItem, "quantity">,
+    totalAdd: number
+  ) => { success: boolean; remainingStock: number }
   removeItem: (id: string) => void
   updateQuantity: (id: string, quantity: number) => void
   clearCart: () => void
@@ -29,18 +33,43 @@ const CartContext = createContext<CartContextType | undefined>(undefined)
 export function CartProvider({children}: {children: ReactNode}) {
     const [items, setItems] = useState<CartItem[]>([])
 
-    const addItem = (item: Omit<CartItem, "quantity">, totalAdd: number) => {
-        setItems((currentItems) => {
-            const existingItem = currentItems.find((i) => i.id === item.id && i.size === item.size && i.color === item.color)
 
-            if(existingItem) {
-                return currentItems.map((i) => 
-                    i.id === item.id && i.size === item.size && i.color === item.color ? {...i, quantity: i.quantity + totalAdd} : i
-                )
-            }
+    const addItem = (
+      item: Omit<CartItem, "quantity">,
+      totalAdd: number
+    ) => {
+      let result = { success: true, remainingStock: 0 };
 
-            return [...currentItems, {...item, quantity: totalAdd}]
-        })
+      setItems((currentItems) => {
+        const existingItem = currentItems.find((i) => 
+          i.id === item.id && 
+          i.size === item.size && 
+          i.color === item.color
+        )
+        const existingQuantity = existingItem?.quantity ?? 0
+        const maxAllowed = item.stock
+        const remaining = maxAllowed - existingQuantity;
+
+        if(totalAdd > remaining){
+          result = {
+            success: false,
+            remainingStock: remaining,
+          };
+          return currentItems;
+        }
+
+        if(existingItem) {
+          return currentItems.map((i) => 
+              i.id === item.id && i.size === item.size && i.color === item.color ? 
+              {...i, quantity: i.quantity + totalAdd} 
+              : i
+          )
+        }
+
+        return [...currentItems, {...item, quantity: totalAdd}]
+      })
+      
+      return result
     }
 
     const removeItem = (id: string) => {
@@ -52,6 +81,8 @@ export function CartProvider({children}: {children: ReactNode}) {
         removeItem(id)
         return
       }
+      const currentItem = items.find((i) => i.id === id)
+      quantity = Math.min(quantity, currentItem?.stock ?? quantity)
 
       setItems((currentItems) => currentItems.map((item) => (item.id === id ? { ...item, quantity } : item)))
     }

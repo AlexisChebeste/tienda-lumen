@@ -1,9 +1,14 @@
 import Image from "next/image";
 import { useState } from "react";
 
-export default function ProductGallery({images}: {images: string[]}) {
-    const [selectImage, setSelectImage] = useState(0)
+export interface ProductGalleryProps {
+    images: string[];
+    selectImage: number;
+    setSelectImage: (index: number) => void;
+}
 
+export default function ProductGallery({images, selectImage, setSelectImage}: ProductGalleryProps) {
+    
     return(
         <div className="grid md:grid-cols-4 gap-3 ">
             <div className="order-1 md:order-2 md:col-span-3 aspect-square h-full">
