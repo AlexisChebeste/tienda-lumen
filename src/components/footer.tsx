@@ -8,24 +8,24 @@ export default function Footer() {
 
                     <div>
                         <h3 className="font-serif text-2xl font-light tracking-[0.2em] mb-4 ">LUMEN</h3>
-                        <p className="text-sm text-muted-foreground">Timeless minimalist fashion for the modern wardrobe.</p>
+                        <p className="text-sm text-muted-foreground">Moda minimalista atemporal para el armario moderno.</p>
                     </div>
                     <div>
                         <h3 className="text-lg font-medium mb-4 tracking-wider uppercase">About</h3>
                         <ul className="space-y-4">
                             <li>
                                 <Link href="/shop" className="text-sm text-muted-foreground hover:text-foreground transition-colors ">
-                                Our Story
+                                Nuestra Historia
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                                Sustainability
+                                Sostenibilidad
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                                Careers
+                                Carreras
                                 </Link>
                             </li>
                         </ul>
@@ -33,21 +33,21 @@ export default function Footer() {
                     </div>
                     
                     <div className="">
-                        <h3 className="text-lg font-medium mb-4 tracking-wider uppercase">SHOP</h3>
+                        <h3 className="text-lg font-medium mb-4 tracking-wider uppercase">TIENDA</h3>
                         <ul className="space-y-2">
                             <li>
                                 <Link href="/shop" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                                Men
+                                Hombre
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                                Women
+                                Mujer
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                                Accessories
+                                Accessorios
                                 </Link>
                             </li>
                         </ul>
@@ -57,7 +57,7 @@ export default function Footer() {
 
                 {/* Bottom Bar */}
                 <div className="mt-12 flex flex-col items-center justify-between gap-4 pt-8 md:flex-row">
-                <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} LUMEN. All rights reserved.</p>
+                <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} LUMEN. Casi todos los derechos reservados.</p>
                 <div className="flex gap-6">
                     <Link href="#" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
                     Instagram

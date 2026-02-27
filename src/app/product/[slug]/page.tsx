@@ -53,7 +53,7 @@ export default function ProductPage() {
                     </div>
                 </section>
                 <section className="mx-auto py-10 flex flex-col gap-4 items-start border-t w-full">
-                    <h2 className="text-2xl font-semibold ">Product Details</h2>
+                    <h2 className="text-2xl font-semibold ">Detalles</h2>
                     <ul className="text-sm list-disc list-inside space-y-2">
                         {product.details.map((detail, index) => (
                             <li key={index}>{detail}</li>

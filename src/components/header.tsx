@@ -23,13 +23,13 @@ export default function Header() {
                     {/* Add navigation links or other header content here */}
                     <nav className="hidden md:flex">
                         <Link href="/shop" className="mx-4 text-sm font-medium hover:underline">
-                            Shop
+                            Tienda
                         </Link>
                         <Link href="/about" className="mx-4 text-sm font-medium hover:underline">
-                            About
+                            Nosotros
                         </Link>
                         <Link href="/contact" className="mx-4 text-sm font-medium hover:underline">
-                            Contact
+                            Contacto
                         </Link>
                     </nav>
 
@@ -37,11 +37,11 @@ export default function Header() {
                     <div className="flex items-center gap-4">
                         <button className="flex items-center p-2 text-sm font-medium hover:underline hover:bg-black/15 transition rounded-full">
                             <Search className="h-5 w-5" />
-                            <span className="sr-only">Search</span>
+                            <span className="sr-only">Buscar</span>
                         </button>
                         <button className="flex items-center p-2 text-sm font-medium hover:underline hover:bg-black/15 transition rounded-full">
                             <User className="h-5 w-5" />
-                            <span className="sr-only">Account</span>
+                            <span className="sr-only">Cuenta</span>
                         </button>
                         <button onClick={() => setIsCartOpen(true)} className="flex items-center p-2 text-sm font-medium hover:underline hover:bg-black/15 transition rounded-full relative">
                             <ShoppingBag className="h-5 w-5" />
@@ -50,7 +50,7 @@ export default function Header() {
                                     {totalItems}
                                 </span>
                             )}
-                            <span className="sr-only">Cart</span>
+                            <span className="sr-only">Carrito</span>
                         </button>
                     </div>
                 </div>

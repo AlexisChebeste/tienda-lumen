@@ -105,7 +105,7 @@ export default function ProductInfo({product, setSelectImage}: {product: Product
                 </div>
             </div>
             <div className="flex flex-col gap-2">
-                <h3>Sizes:</h3>
+                <h3>Talles:</h3>
                 
                 <div className="flex gap-2">
                     {sizesForColor.map((variant) => {
@@ -117,7 +117,7 @@ export default function ProductInfo({product, setSelectImage}: {product: Product
                             <button
                             disabled={isDisabled}
                             onClick={() => setSizeSelected(variant.size)}
-                            title={isDisabled ? 'No stock available' : undefined}
+                            title={isDisabled ? 'Sin stock disponible' : undefined}
                             className={`
                                 relative z-10 
                                 border w-14 h-12 text-md font-medium transition 
@@ -135,7 +135,7 @@ export default function ProductInfo({product, setSelectImage}: {product: Product
                 </div>
                 {outStock && selectedVariant && (
                     <p className="text-red-600">
-                        You can only add {selectedVariant.stock} units in total.
+                        Solo puedes añadir {selectedVariant.stock} unidades en total.
                     </p>
                 )}
             </div>
@@ -143,7 +143,7 @@ export default function ProductInfo({product, setSelectImage}: {product: Product
             {isColorOutOfStock ? (
                 <div className="flex w-full gap-2">
                     <button className="w-full rounded-md bg-black px-4 py-3 text-white hover:bg-gray-800 transition-colors duration-200 cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed" disabled={true}>
-                        Out of stock
+                        Sin stock
                     </button>
                 </div>
             ) : (
@@ -154,14 +154,14 @@ export default function ProductInfo({product, setSelectImage}: {product: Product
                             <div className="w-12 py-3 border-t border-b flex items-center justify-center">{count}</div>
                             <button onClick={() => setCount(count + 1)} className="px-4 py-3 border flex items-center justify-center hover:bg-gray-200 transition-colors duration-200 cursor-pointer">+</button>
                         </div>
-                        <button onClick={handleAddItemToCart} className="w-full rounded-md bg-stone-800 px-4 py-3 text-white hover:bg-stone-900 transition-colors duration-200 cursor-pointer disabled:bg-gray-300 disabled:text-stone-500 disabled:cursor-not-allowed font-medium" disabled={!sizeSelected || count > availableStock} title={!sizeSelected ? "Please select a size" : count > availableStock ? `Only ${availableStock} units available` : undefined}>
-                            {!sizeSelected ? "Select a size" : "Add to Cart"}
+                        <button onClick={handleAddItemToCart} className="w-full rounded-md bg-stone-800 px-4 py-3 text-white hover:bg-stone-900 transition-colors duration-200 cursor-pointer disabled:bg-gray-300 disabled:text-stone-500 disabled:cursor-not-allowed font-medium" disabled={!sizeSelected || count > availableStock} title={!sizeSelected ? "Por favor selecciona un talle" : count > availableStock ? `Solo ${availableStock} unidades disponibles` : undefined}>
+                            {!sizeSelected ? "Selecciona un talle" : "Añadir al carrito"}
                         </button>
 
                     </div>
                     {count > availableStock && selectedVariant && (
                         <p className="text-red-600">
-                            {availableStock === 0 ? "No more stock available" : `Only ${availableStock} units available`}
+                            {availableStock === 0 ? "No hay stock disponible" : `Solo ${availableStock} unidades disponibles`}
                         </p>
                     )}
                 </div>
