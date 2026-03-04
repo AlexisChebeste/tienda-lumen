@@ -17,18 +17,18 @@ export default function Header() {
             <header className="sticky top-0 z-30 w-full border-b border-border bg-background/90 backdrop-blur-sm">
                 <div className="container flex h-20 items-center justify-between px-6 mx-auto max-w-7xl">
                     <Link href="/" className="flex items-center">
-                        <span className="font-serif text-2xl font-light tracking-[0.2em]">LUMEN</span>
+                        <span className="font-serif text-2xl text-neutral-600  font-light tracking-[0.3em]">LUMEN</span>
                     </Link>
 
                     {/* Add navigation links or other header content here */}
                     <nav className="hidden md:flex">
-                        <Link href="/shop" className="mx-4 text-sm font-medium hover:underline">
+                        <Link href="/tienda" className="mx-4 text-sm font-medium text-neutral-600 hover:underline">
                             Tienda
                         </Link>
-                        <Link href="/about" className="mx-4 text-sm font-medium hover:underline">
+                        <Link href="/nosotros" className="mx-4 text-sm font-medium text-neutral-600 hover:underline">
                             Nosotros
                         </Link>
-                        <Link href="/contact" className="mx-4 text-sm font-medium hover:underline">
+                        <Link href="/contacto" className="mx-4 text-sm font-medium text-neutral-600 hover:underline">
                             Contacto
                         </Link>
                     </nav>

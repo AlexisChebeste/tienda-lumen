@@ -1,8 +1,8 @@
+import { ProductImage } from "@/domain/product-image";
 import Image from "next/image";
-import { useState } from "react";
 
 export interface ProductGalleryProps {
-    images: string[];
+    images: ProductImage[];
     selectImage: number;
     setSelectImage: (index: number) => void;
 }
@@ -13,7 +13,7 @@ export default function ProductGallery({images, selectImage, setSelectImage}: Pr
         <div className="grid md:grid-cols-4 gap-3 ">
             <div className="order-1 md:order-2 md:col-span-3 aspect-square h-full">
                 <Image 
-                    src={images[selectImage]} 
+                    src={images[selectImage].url} 
                     alt="Product Image"  
                     width={800} 
                     height={800} 
@@ -24,7 +24,7 @@ export default function ProductGallery({images, selectImage, setSelectImage}: Pr
                 {images.map((img, index) => (
                     <button key={index} onClick={()=> setSelectImage(index)} aria-label={`Select image ${index + 1}`} className={`border-2 ${selectImage === index ? 'border-black' : 'border-gray-300' } rounded-md overflow-hidden h-max cursor-pointer`}>
                         <Image 
-                            src={img} 
+                            src={img.url} 
                             alt={`Product Image ${index + 1}`} 
                             width={250} 
                             height={250} 

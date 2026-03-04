@@ -1,11 +1,14 @@
 import Footer from "@/components/footer";
 import Header from "@/components/header";
-import ProductCard from "@/components/product-card";
-import { products } from "@/data/products";
+import ProductPopular from "@/components/product-popular";
+import { CatalogProduct } from "@/domain/catalog.types";
+import { getProductsPopular } from "@/services/catalog.service";
 import Link from "next/link";
 
+export default async function Home() {
 
-export default function Home() {
+  const products : CatalogProduct[] =  await getProductsPopular() || [];
+
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
@@ -36,7 +39,7 @@ export default function Home() {
             <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2  lg:grid-cols-4">
               {/* Example Product Cards */}
               {products.map((product) => (
-               <ProductCard key={product.id} product={product} />
+               <ProductPopular key={product.id} product={product} />
               ))}
             </div>
           </div>

@@ -1,10 +1,19 @@
 'use client';
 
-import { ProductFilter } from "@/data/products";
+import { FiltersProducts } from "@/app/tienda/page";
+import { CatalogProduct } from "@/domain/catalog.types";
+import { categories } from "@/domain/categories";
+import { colors } from "@/domain/colors";
+import { sizes } from "@/domain/sizes";
 import { useState } from "react";
 
+interface FilterSectionProps {
+    filters: FiltersProducts;
+    setFilters: React.Dispatch<React.SetStateAction<FiltersProducts>>;
+    products: CatalogProduct[];
+}
 
-export default function FilterSection({filters, setFilters}: {filters: ProductFilter, setFilters: React.Dispatch<React.SetStateAction<ProductFilter>>}) {
+export default function FilterSection({filters, setFilters, products}: FilterSectionProps) {
 
 
     const [priceRange, setPriceRange] = useState([0, 500]);
@@ -17,7 +26,7 @@ export default function FilterSection({filters, setFilters}: {filters: ProductFi
         }));
     }
 
-    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, filterType: 'category' | 'size' | 'color') => {
+    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, filterType: 'categoryIds' | 'sizeIds' | 'colorIds') => {
         const value = e.target.value;
         setFilters(prev => {
             const currentValues = Array.isArray(prev[filterType]) ? prev[filterType] : [];
@@ -36,49 +45,80 @@ export default function FilterSection({filters, setFilters}: {filters: ProductFi
     }
 
   return (
-    <div className="w-full p-4 hidden py-4 lg:flex flex-col gap-8 border-r border-slate-200">
-        <div className="flex flex-col gap-4">
+    <div className="w-full  hidden py-4 lg:flex flex-col gap-5 p-2">
+
+        <h3 className="font-medium text-base tracking-wide">Filtrar por</h3>
+
+        {/* Filtro de Categoria */}
+        <div className="flex flex-col gap-3 border-b border-slate-200 pb-5">
             <label className="block uppercase text-sm font-semibold">Categoría</label>
             <div className="flex flex-col gap-2 text-sm  text-slate-800">
-                <label className="flex items-center gap-2">
-                    <input type="checkbox" name="category" value="camisetas" className="size-4 rounded-lg accent-black cursor-pointer checked:rounded-md" onChange={(e) => handleCheckboxChange(e, 'category')} />
-                    Camisetas
-                </label>
-                <label className="flex items-center gap-2">
-                    <input type="checkbox" name="category" value="pantalones" className="size-4 rounded-lg accent-black cursor-pointer checked:rounded-md" onChange={(e) => handleCheckboxChange(e, 'category')} />
-                    Pantalones
-                </label>
-                <label className="flex items-center gap-2">
-                    <input type="checkbox" name="category" value="abrigos" className="size-4 rounded-lg accent-black cursor-pointer checked:rounded-md" onChange={(e) => handleCheckboxChange(e, 'category')} />
-                    Abrigos
-                </label>
+                {categories.map(category => (
+                    <label key={category.id} className="flex items-center gap-2">
+                        <input
+                            type="checkbox"
+                            name="category"
+                            value={category.id}
+                            className="size-4 rounded-lg accent-black cursor-pointer checked:rounded-md"
+                            onChange={(e) => handleCheckboxChange(e, 'categoryIds')}
+                        />
+                        {category.name}
+                    </label>
+                ))}
             </div>
         </div>
-        <div className="flex flex-col gap-4">
+
+        {/* Filtro de talle */}
+        <div className="flex flex-col gap-3 border-b border-slate-200 pb-5">
             <label className="block uppercase text-sm font-semibold">Talle</label>
             <div className="flex flex-col gap-2 text-sm  text-slate-800">
-                <label className="flex items-center gap-2">
-                    <input type="checkbox" name="talle" value="xs" className="size-4 rounded-lg accent-black cursor-pointer checked:rounded-md" onChange={(e) => handleCheckboxChange(e, 'size')} />
-                    XS
-                </label>
-                <label className="flex items-center gap-2">
-                    <input type="checkbox" name="talle" value="s" className="size-4 rounded-lg accent-black cursor-pointer checked:rounded-md" onChange={(e) => handleCheckboxChange(e, 'size')} />
-                    S
-                </label>
-                <label className="flex items-center gap-2">
-                    <input type="checkbox" name="talle" value="m" className="size-4 rounded-lg accent-black cursor-pointer checked:rounded-md" onChange={(e) => handleCheckboxChange(e, 'size')} />
-                    M
-                </label>
-                <label className="flex items-center gap-2">
-                    <input type="checkbox" name="talle" value="l" className="size-4 rounded-lg accent-black cursor-pointer checked:rounded-md" onChange={(e) => handleCheckboxChange(e, 'size')} />
-                    L
-                </label>
-                <label className="flex items-center gap-2">
-                    <input type="checkbox" name="talle" value="xl" className="size-4 rounded-lg accent-black cursor-pointer checked:rounded-md" onChange={(e) => handleCheckboxChange(e, 'size')} />
-                    XL
-                </label>
+                {sizes.map(size => (
+                    <label key={size.id} className="flex items-center gap-2">
+                        <input
+                            type="checkbox"
+                            name="talle"
+                            value={size.id}
+                            className="size-4 rounded-lg accent-black cursor-pointer checked:rounded-md"
+                            onChange={(e) => handleCheckboxChange(e, 'sizeIds')}
+                        />
+                        {size.name}
+                    </label>
+                ))}
             </div>
         </div>
+
+        {/* Filtro de color */}
+        <div className="flex flex-col gap-3 border-b border-slate-200 pb-5">
+            <label className="block uppercase text-sm font-semibold">Color</label>
+            <div className="flex flex-wrap gap-3 text-sm  text-slate-800">
+                {colors.map(color => (
+                    <label key={color.name} className="cursor-pointer" title={color.name}>
+                        <input
+                        type="checkbox"
+                        value={color.id}
+                        onChange={(e) => handleCheckboxChange(e, "colorIds")}
+                        className="peer sr-only"
+                        />
+
+                        <div
+                        className="
+                            size-8
+                            rounded-full
+                            border border-neutral-300
+                            peer-checked:ring-2
+                            peer-checked:ring-black
+                            peer-checked:ring-offset-2
+                            hover:scale-110
+                            transition
+                        "
+                        style={{ backgroundColor: color.hex }}
+                        />
+                    </label>
+                ))}
+            </div>
+        </div>
+
+        {/* Filtro de precio */}
         <div >
             <label className="block mb-2 uppercase">Rango de Precios</label>
             <input 

@@ -4,18 +4,34 @@ import Footer from "@/components/footer";
 import Header from "@/components/header";
 import ProductGallery from "@/components/product-gallery";
 import ProductInfo from "@/components/product-info";
-import { Product, products } from "@/data/products";
+import { CatalogProduct } from "@/domain/catalog.types";
+import { getProductBySlug } from "@/services/catalog.service";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 
 export default function ProductPage() {
     const params = useParams();
     const { slug } = params;
 
-    const product: Product | undefined = products.find((p) => p.slug === slug);
+    const [product, setProduct] = useState<CatalogProduct | null>(null);
+
+    // Simulate fetching product by slug
+    useEffect(() => {
+        // Replace this with actual API call
+        const fetchProduct = async () => {
+            // Simulate delay
+            await new Promise(resolve => setTimeout(resolve, 500));
+            // Mock product data based on slug
+            const productData: CatalogProduct = await getProductBySlug(slug as string) as CatalogProduct;
+            setProduct(productData);
+        };
+
+        fetchProduct();
+    }, [slug]);
+
     const [selectImage, setSelectImage] = useState(0)
 
     if (!product) {
@@ -46,20 +62,20 @@ export default function ProductPage() {
                     <div className="flex flex-col gap-2 min-h-full">
                         <div className="flex flex-col gap-2">
                             <h1 className="font-serif text-4xl font-light tracking-tight ">{product.name}</h1>
-                            <p className="text-2xl font-medium text-gray-600">${product.price.toFixed(2)}</p>
+                            <p className="text-2xl font-medium text-gray-600">${product.basePrice.toFixed(2)}</p>
                             <p className="text-base text-muted-foreground">{product.description}</p>
                         </div>
                         <ProductInfo product={product} setSelectImage={setSelectImage} />
                     </div>
                 </section>
-                <section className="mx-auto py-10 flex flex-col gap-4 items-start border-t w-full">
+{/*                 <section className="mx-auto py-10 flex flex-col gap-4 items-start border-t w-full">
                     <h2 className="text-2xl font-semibold ">Detalles</h2>
                     <ul className="text-sm list-disc list-inside space-y-2">
                         {product.details.map((detail, index) => (
                             <li key={index}>{detail}</li>
                         ))}
                     </ul>
-                </section>
+                </section> */}
             </main>
 
             <Footer />

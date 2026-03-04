@@ -1,8 +1,14 @@
 'use client';
+import { FiltersProducts } from "@/app/tienda/page";
 import { Filter } from "lucide-react";
 import { useState } from "react";
 
-export default function FilterSectionMobile({filters, setFilters}: {filters: {category: string[], size: string[], priceRange: [number, number]}, setFilters: React.Dispatch<React.SetStateAction<{category: string[], size: string[], priceRange: [number, number]}>>}) {
+interface FilterSectionMobileProps {
+    filters: FiltersProducts;
+    setFilters: React.Dispatch<React.SetStateAction<FiltersProducts>>;
+}
+
+export default function FilterSectionMobile({filters, setFilters}: FilterSectionMobileProps) {
     const [openMenu, setOpenMenu] = useState(false);
     return (
         <div className="w-full p-4 lg:hidden">
@@ -11,7 +17,7 @@ export default function FilterSectionMobile({filters, setFilters}: {filters: {ca
                     <option value="">Ordenar por</option>
                     <option value="price-low">Precio: De menor a mayor</option>
                     <option value="price-high">Precio: De mayor a menor</option>
-                    <option value="name">Nombre</option>
+                    <option value="name">Recientes</option>
                 </select>
                 <button className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded pl-3 pr-8 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md  cursor-pointer flex items-center gap-2 "
                     onClick={() => setOpenMenu(!openMenu)}>

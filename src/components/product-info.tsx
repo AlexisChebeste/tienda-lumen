@@ -1,36 +1,33 @@
-import { getProductVariants, Product, ProductVariant, uniqueColorsFromVariants } from "@/data/products";
+import { CatalogProduct, ProductVariant } from "@/domain/catalog.types";
+import { Color } from "@/domain/colors";
 import { useCart } from "@/lib/card-context";
-import { useEffect, useState } from "react";
+import { uniqueColorsFromVariants } from "@/services/product.service";
+import { useEffect, useMemo, useState } from "react";
 
-export default function ProductInfo({product, setSelectImage}: {product: Product, setSelectImage: (index: number) => void}) {
-    const [sizeSelected, setSizeSelected] = useState<string | null>(null);
-    const [colorSelected, setColorSelected] = useState<string>("");
-    const [variantProduct, setVariantProduct] = useState<ProductVariant[]>([])
+export default function ProductInfo({product, setSelectImage}: {product: CatalogProduct, setSelectImage: (index: number) => void}) {
+
+    const [variantProduct, setVariantProduct] = useState<ProductVariant[]>((product.variants || []).map(v => ({
+        ...v,
+        productId: product.id,
+        image: product.images[0]?.url || ''
+    })));
+    const colors = uniqueColorsFromVariants(variantProduct)
     const [outStock, setOutStock] = useState<boolean>(false)
     const [count, setCount] = useState(1);
+    const [sizeSelected, setSizeSelected] = useState<string | null>(null);
+    const [colorSelected, setColorSelected] = useState<Color>(colors[0] || { name: '', hex: '' });
     const {addItem, items} = useCart()
 
-    useEffect(() => {
-        setSizeSelected(null);
-        setCount(1);
-        const variants = getProductVariants(product.id)
-
-        setVariantProduct(variants)
-        setColorSelected(variants[0].color.name)
-
-    }, [product]);
-
-    const colors = uniqueColorsFromVariants(variantProduct)
-    
-    const sizesForColor = variantProduct
-        .filter(v => v.color.name === colorSelected)
+    const sizesForColor = useMemo(() => variantProduct
+        .filter(v => v.color.id === colorSelected.id)
+    , [variantProduct, colorSelected]);
 
     const isColorOutOfStock = sizesForColor.every(v => v.stock === 0);
 
     const selectedVariant = variantProduct.find(
         v =>
-        v.color.name === colorSelected &&
-        v.size === sizeSelected
+        v.color.id === colorSelected.id &&
+        v.size.name === sizeSelected
     );
 
     const handleAddItemToCart = () =>{
@@ -41,10 +38,10 @@ export default function ProductInfo({product, setSelectImage}: {product: Product
                 id: selectedVariant.id,     
                 productId: product.id,
                 name: product.name,
-                price: product.price,
+                price: product.basePrice,
                 image: selectedVariant.image,
                 color: selectedVariant.color.name,
-                size: selectedVariant.size,
+                size: selectedVariant.size.name,
                 sku: selectedVariant.sku,
                 stock: selectedVariant.stock
             }, count
@@ -58,7 +55,7 @@ export default function ProductInfo({product, setSelectImage}: {product: Product
         setOutStock(false)
     }
 
-    const handleColor  = (color : string) => {
+    const handleColor  = (color : Color) => {
         if (colorSelected !== color){
             setSizeSelected(null)
             setColorSelected(color)
@@ -67,8 +64,8 @@ export default function ProductInfo({product, setSelectImage}: {product: Product
         }
     }
 
-    const handleColorChange = (color: string) => {
-        const index = product.images.findIndex(img => img.includes(color.replace(/\s/g, '').toLowerCase()));
+    const handleColorChange = (color: Color) => {
+        const index = product.images.findIndex(img => img.colorId === color.id);
         if (index !== -1) {
             setSelectImage(index);
         }
@@ -77,7 +74,7 @@ export default function ProductInfo({product, setSelectImage}: {product: Product
     const cartItem = items.find(
     (i) =>
         i.id === selectedVariant?.id &&
-        i.size === selectedVariant?.size &&
+        i.size === selectedVariant?.size.name &&
         i.color === selectedVariant?.color.name
     );
 
@@ -89,16 +86,16 @@ export default function ProductInfo({product, setSelectImage}: {product: Product
         <div className="flex flex-col gap-4 mt-auto">
 
             <div className="flex flex-col ">
-                <h3>Color: {colorSelected}</h3>
+                <h3>Color: {colorSelected.name}</h3>
                 <div className="mt-2 flex gap-2">
                     {colors.map((color) => (
                         <button 
                             key={color.name} 
-                            onClick={() => handleColor(color.name)} 
+                            onClick={() => handleColor(color)} 
                             className={`border-2 p-5 rounded-full text-md font-medium  cursor-pointer transition-colors duration-200 
-                                ${colorSelected === color.name ? 'border-black' : 'border-gray-300 hover:border-gray-500 hover:scale-105'}
+                                ${colorSelected.name === color.name ? 'border-black' : 'border-gray-300 hover:border-gray-500 hover:scale-105'}
                             `} 
-                            style={{ backgroundColor: color.value }}
+                            style={{ backgroundColor: color.hex }}
                             aria-label={color.name}
                         />
                     ))}
@@ -110,13 +107,13 @@ export default function ProductInfo({product, setSelectImage}: {product: Product
                 <div className="flex gap-2">
                     {sizesForColor.map((variant) => {
                         const isDisabled = variant.stock === 0;
-                        const isSelected = sizeSelected === variant.size;
+                        const isSelected = sizeSelected === variant.size.name;
 
                         return (
-                        <div key={variant.size} className="relative">
+                        <div key={variant.size.id} className="relative">
                             <button
                             disabled={isDisabled}
-                            onClick={() => setSizeSelected(variant.size)}
+                            onClick={() => setSizeSelected(variant.size.name)}
                             title={isDisabled ? 'Sin stock disponible' : undefined}
                             className={`
                                 relative z-10 
@@ -127,7 +124,7 @@ export default function ProductInfo({product, setSelectImage}: {product: Product
                                 : 'hover:bg-gray-200 cursor-pointer'}
                             `}
                             >
-                                {variant.size}
+                                {variant.size.name}
                             </button>
                         </div>
                         );
