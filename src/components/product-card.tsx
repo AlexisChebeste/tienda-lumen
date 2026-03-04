@@ -23,27 +23,26 @@ export default function ProductCard({ product }: { product: CatalogProduct }) {
                     className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300 ease-in-out"
                 />
             </div>
-            <div className="flex flex-wrap gap-3 p-2 text-sm  text-slate-800">
+            <div className="flex items-center justify-between w-full text-sm  text-slate-800">
                 {uniqueColors.map(color => (
-                    <label key={color.name} className="cursor-pointer" title={color.name}>
+                    <label key={color.name} className="cursor-pointer w-full" title={color.name}>
                         <input
                             type="checkbox"
                             value={color.id}
                             className="peer sr-only"
                         />
-
                         <div
-                        className="
-                            size-8
-                            rounded-full
-                            border border-neutral-300
-                            peer-checked:ring-2
-                            peer-checked:ring-black
-                            peer-checked:ring-offset-2
-                            hover:scale-105
-                            transition
-                        "
-                        style={{ backgroundColor: color.hex }}
+                            className="
+                                h-8 w-full
+                                rounded-xs
+                                border border-neutral-300
+                                peer-checked:ring-2
+                                peer-checked:ring-black
+                                peer-checked:ring-offset-2
+                                hover:scale-105
+                                transition
+                            "
+                            style={{ backgroundColor: color.hex }}
                         />
                     </label>
                 ))}

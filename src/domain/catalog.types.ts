@@ -11,6 +11,7 @@ export interface CatalogProduct {
   images: ProductImage[];
   basePrice: number;
   category: Category;
+  details: string[];
   variants: {
     id: string;
     price: number;

@@ -46,6 +46,7 @@ export async function getProductsPopular() {
         sku: v.sku,
         color: colors.find(c => c.id === v.colorId)!,
         size: sizes.find(s => s.id === v.sizeId)!,
+        image: productImages.find(img => img.productId === product.id && img.url.includes(colors.find(c => c.id === v.colorId)!.name.replace(/\s/g, '').toLowerCase()))?.url || ''
       }));
 
     const images : ProductImage[] = productImages.filter(img => img.productId === product.id);

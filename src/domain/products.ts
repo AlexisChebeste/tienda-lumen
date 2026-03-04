@@ -6,4 +6,5 @@ export interface Product {
   categoryId: string;
   basePrice: number;
   createdAt: string;
+  details: string[];
 }

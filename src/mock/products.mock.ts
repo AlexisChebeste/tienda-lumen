@@ -9,6 +9,11 @@ export const products : Product[] = [
     categoryId: "cat1",
     basePrice: 29.99,
     createdAt: "2024-01-01T00:00:00Z",
+    details: [
+      "100% algodón",
+      "Disponible en varios colores",
+      "Lavar a máquina con colores similares",
+    ]
   },
     {
     id: "2",
@@ -18,6 +23,11 @@ export const products : Product[] = [
     categoryId: "cat2",
     basePrice: 49.99,
     createdAt: "2024-01-02T00:00:00Z",
+    details: [
+      "100% algodón",
+      "Disponible en varios colores",
+      "Lavar a máquina con colores similares",
+    ]
   },
     {
     id: "3",
@@ -27,6 +37,11 @@ export const products : Product[] = [
     categoryId: "cat3",
     basePrice: 39.99,
     createdAt: "2024-01-03T00:00:00Z",
+    details: [
+      "100% lana",
+      "Disponible en varios colores",
+      "Lavar a mano con agua fría",
+    ]
   },
   {
     id: "4",
@@ -36,5 +51,10 @@ export const products : Product[] = [
     categoryId: "cat1",
     basePrice: 29.99,
     createdAt: "2024-01-04T00:00:00Z",
+    details: [
+      "100% algodón",
+      "Disponible en varios colores",
+      "Lavar a máquina con colores similares",
+    ]
   }
 ];
