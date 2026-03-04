@@ -10,10 +10,9 @@ import { useState } from "react";
 interface FilterSectionProps {
     filters: FiltersProducts;
     setFilters: React.Dispatch<React.SetStateAction<FiltersProducts>>;
-    products: CatalogProduct[];
 }
 
-export default function FilterSection({filters, setFilters, products}: FilterSectionProps) {
+export default function FilterSection({filters, setFilters}: FilterSectionProps) {
 
 
     const [priceRange, setPriceRange] = useState([0, 500]);
@@ -49,6 +48,31 @@ export default function FilterSection({filters, setFilters, products}: FilterSec
 
         <h3 className="font-medium text-base tracking-wide">Filtrar por</h3>
 
+        {/* Filtro utilizados */}
+        <div className="flex flex-col gap-3 border-b border-slate-200 pb-4">
+            <div className="flex flex-col gap-2 text-sm text-slate-800">
+                {filters.categoryIds && filters.categoryIds.length > 0 && (
+                        <div>
+                            <span className="font-medium">Categorías:</span> {filters.categoryIds.map(id => categories.find(c => c.id === id)?.name).join(', ')}
+                        </div>
+                )}
+                {filters.sizeIds && filters.sizeIds.length > 0 && (
+                    <div>
+                        <span className="font-medium">Talles:</span> {filters.sizeIds.map(id => sizes.find(s => s.id === id)?.name).join(', ')}
+                    </div>
+                )}
+                {filters.colorIds && filters.colorIds.length > 0 && (
+                    <div>
+                        <span className="font-medium">Colores:</span> {filters.colorIds.map(id => colors.find(c => c.id === id)?.name).join(', ')}
+                    </div>
+                )}
+                {filters.priceRange && (
+                    <div>
+                        <span className="font-medium">Precio:</span> ${filters.priceRange[0]} - ${filters.priceRange[1]}
+                    </div>
+                )}
+            </div>
+        </div>
         {/* Filtro de Categoria */}
         <div className="flex flex-col gap-3 border-b border-slate-200 pb-5">
             <label className="block uppercase text-sm font-semibold">Categoría</label>

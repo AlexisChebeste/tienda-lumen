@@ -17,7 +17,20 @@ export interface FiltersProducts {
   priceRange: [number, number] | null;
 }
 
-export default function ShopPage() {
+type Props = {
+  searchParams: {
+    category?: string
+    color?: string
+    size?: string
+    minPrice?: string
+    maxPrice?: string
+    sort?: string
+    page?: string
+  }
+}
+
+
+export default function ShopPage({ searchParams }: Props) {
   const [filters, setFilters] = useState<FiltersProducts>({
     categoryIds: [],
     colorIds: [],
@@ -48,8 +61,8 @@ export default function ShopPage() {
 
       <main className="flex-1 grid grid-cols-1 lg:grid-cols-5 max-w-7xl mx-auto w-full p-4 gap-6">
 
-        <FilterSection filters={filters} setFilters={setFilters} products={products}/>
-        {/*<FilterSectionMobile filters={filters} setFilters={setFilters} /> */}
+        <FilterSection filters={filters} setFilters={setFilters} />
+        <FilterSectionMobile filters={filters} setFilters={setFilters} />
        
         {/* Aquí iría el listado de productos */}
         <section className="col-span-4 flex flex-col gap-2 py-2 ">
