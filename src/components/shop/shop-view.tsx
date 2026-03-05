@@ -42,8 +42,8 @@ export default function ShopView({
           </section>
         ) : (
           <section className="col-span-4 flex flex-col gap-2 py-2 ">
-            <div className="hidden justify-between items-center px-3 lg:flex">
-              <p className="text-sm text-gray-500">{total} {total === 1 ? 'producto' : 'productos'}</p>
+            <div className="hidden justify-between items-center px-3 lg:flex gap-10">
+              <p className="text-sm text-gray-500 w-full">{total} {total === 1 ? 'producto' : 'productos'}</p>
               <SortSelect />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-12 p-2 lg:grid-cols-3  mx-auto h-full">

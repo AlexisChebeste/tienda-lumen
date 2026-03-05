@@ -92,7 +92,7 @@ export default function ProductInfo({product, setSelectImage}: {product: Catalog
                         <button 
                             key={color.name} 
                             onClick={() => handleColor(color)} 
-                            className={`border-2 p-5 rounded-full text-md font-medium  cursor-pointer transition-colors duration-200 
+                            className={`border-2 w-10 h-10 rounded-full  cursor-pointer transition-colors duration-200 hover:scale-110
                                 ${colorSelected.name === color.name ? 'border-black' : 'border-gray-300 hover:border-gray-500 hover:scale-105'}
                             `} 
                             style={{ backgroundColor: color.hex }}
@@ -120,7 +120,7 @@ export default function ProductInfo({product, setSelectImage}: {product: Catalog
                                 border w-14 h-12 text-md font-medium transition 
                                 ${isSelected ? 'bg-black text-white border-black hover:text-black' : ''}
                                 ${isDisabled
-                                ? 'opacity-50 cursor-not-allowed bg-gray-300 text-stone-600'
+                                ? 'opacity-50 cursor-not-allowed bg-gray-300 text-stone-600 line-through'
                                 : 'hover:bg-gray-200 cursor-pointer'}
                             `}
                             >

@@ -11,12 +11,11 @@ export default function ProductGallery({images, selectImage, setSelectImage}: Pr
     
     return(
         <div className="grid md:grid-cols-4 gap-3 ">
-            <div className="order-1 md:order-2 md:col-span-3 aspect-square h-full">
+            <div className="relative order-1 md:order-2 md:col-span-3 aspect-square h-full">
                 <Image 
                     src={images[selectImage].url} 
                     alt="Product Image"  
-                    width={800} 
-                    height={800} 
+                    fill 
                     className="object-cover"
                 />
             </div>
@@ -28,7 +27,7 @@ export default function ProductGallery({images, selectImage, setSelectImage}: Pr
                             alt={`Product Image ${index + 1}`} 
                             width={250} 
                             height={250} 
-                            className="object-cover brightness-75 hover:brightness-100 transition duration-200"/>
+                            className="object-cover brightness-75 hover:brightness-100 transition duration-200 hover:scale-105"/>
                     </button>
                 ))}
             </div>

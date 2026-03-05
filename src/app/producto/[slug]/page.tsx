@@ -69,10 +69,10 @@ export default function ProductPage() {
                     </div>
                 ) : product && (
                     <>
-                        <section className="mx-auto py-10 grid gap-6 md:grid-cols-2 items-start">
+                        <section className="mx-auto py-5 lg:py-10 grid grid-cols-1 gap-6 lg:gap-10 lg:grid-cols-2 items-start">
                             <ProductGallery images={product.images} selectImage={selectImage} setSelectImage={setSelectImage} />
-                            <div className="flex flex-col gap-2 min-h-full">
-                                <div className="flex flex-col gap-2">
+                            <div className="flex flex-col gap-2 min-h-full max-w-lg">
+                                <div className="flex flex-col gap-1">
                                     <h1 className="font-serif text-4xl font-light tracking-tight ">{product.name}</h1>
                                     <p className="text-2xl font-medium text-gray-600">${product.basePrice.toFixed(2)}</p>
                                     <p className="text-base text-muted-foreground">{product.description}</p>
@@ -80,7 +80,7 @@ export default function ProductPage() {
                                 <ProductInfo product={product} setSelectImage={setSelectImage} />
                             </div>
                         </section>
-                        <section className="mx-auto py-10 flex flex-col gap-4 items-start border-t w-full">
+                        <section className="mx-auto py-10 flex flex-col gap-4 items-start border-t w-full ">
                             <h2 className="text-2xl font-semibold ">Detalles</h2>
                             <ul className="text-sm list-disc list-inside space-y-2">
                                 {product.details.map((detail, index) => (
