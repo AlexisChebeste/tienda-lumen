@@ -5,7 +5,8 @@ import { colors } from "@/domain/colors";
 import { sizes } from "@/domain/sizes";
 import { Filter, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation"
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { SortSelect } from "./sort-select";
 
 
 export default function FilterSectionMobile() {
@@ -14,72 +15,72 @@ export default function FilterSectionMobile() {
     const searchParams = useSearchParams()
 
     function updateUrl(param: string, value: string) {
-
-        const params = new URLSearchParams(searchParams.toString())
-
-        const current = params.get(param)
-
-        if (!current) {
-            params.set(param, value)
-        } else {
-
-            const values = current.split(",")
-
-            if (values.includes(value)) {
-            const filtered = values.filter(v => v !== value)
-
-            if (filtered.length === 0) params.delete(param)
-            else params.set(param, filtered.join(","))
+            const params = new URLSearchParams(searchParams.toString())
+    
+        
+            if (param === "priceRange") {
+                params.set(param, value)
             } else {
-            params.set(param, [...values, value].join(","))
+                const current = params.get(param)
+    
+                if (!current) {
+                params.set(param, value)
+                } else {
+                const values = current.split(",")
+    
+                if (values.includes(value)) {
+                    const filtered = values.filter(v => v !== value)
+    
+                    if (filtered.length === 0) params.delete(param)
+                    else params.set(param, filtered.join(","))
+                } else {
+                    params.set(param, [...values, value].join(","))
+                }
+                }
             }
+    
+            params.set("page", "1") // Resetear a página 1 al cambiar filtros
+    
+            router.push(`/tienda?${params.toString()}`)
         }
-
-        params.set("page", "1") // reset paginación
-
-        router.push(`/tienda?${params.toString()}`)
-    }
-    const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-
-    const value = e.target.value
-
-    const params = new URLSearchParams(searchParams.toString())
-
-    params.set("minPrice", "0")
-    params.set("maxPrice", value)
-    params.set("page", "1")
-
-    router.push(`/tienda?${params.toString()}`)
-    }
-
-
-    const handleCheckboxChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    param: string
-    ) => {
-
-    const value = e.target.value
-
-    updateUrl(param, value)
-    }
-
-    const selectedCategories = searchParams.get("category")?.split(",") || []
-
-    const selectedSizes = searchParams.get("size")?.split(",") || []
-
-    const selectedColors = searchParams.get("color")?.split(",") || []
-
-    const selectedPriceRange = searchParams.get("priceRange")?.split("-").map(Number) || [0, 500]
+        const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+            setPrice(Number(e.target.value))
+        }
+    
+        
+    
+        const handleCheckboxChange = (
+        e: React.ChangeEvent<HTMLInputElement>,
+        param: string
+        ) => {
+    
+        const value = e.target.value
+    
+        updateUrl(param, value)
+        }
+        
+        const selectedCategories = searchParams.get("category")?.split(",") || []
+    
+        const selectedSizes = searchParams.get("size")?.split(",") || []
+    
+        const selectedColors = searchParams.get("color")?.split(",") || []
+    
+        const selectedPriceRange = searchParams.get("priceRange")?.split("-").map(Number) || [0, 500]
+    
+    const [price, setPrice] = useState(selectedPriceRange[1])
+    
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            updateUrl("priceRange", `0-${price}`)
+        }, 400) // 400ms debounce
+    
+        return () => clearTimeout(timeout)
+        }, [price])
 
     return (
         <div className="h-max flex items-center w-full p-2 lg:hidden col-span-4 ">
             <div className="grid grid-cols-2 w-full  gap-6">
-                <select className="w-full bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md cursor-pointer appearance-none pr-8 bg-no-repeat bg-right" style={{backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`, backgroundPosition: 'right 8px center'}}>
-                    <option value="">Ordenar por</option>
-                    <option value="price-asc">Precio: Menor a Mayor</option>
-                    <option value="price-desc">Precio: Mayor a Menor</option>
-                    <option value="name">Nombre</option>
-                </select>
+                <SortSelect />
                 <button className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded pl-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md  cursor-pointer flex items-center gap-2 " onClick={() => setOpenMenu(!openMenu)} >
                     <Filter className="size-4 text-slate-700" />
                     Filtrar por
@@ -104,7 +105,7 @@ export default function FilterSectionMobile() {
 
         
                 {/* Filtro utilizados */}
-                <div className="flex flex-col gap-3 border-b border-slate-200 pb-4">
+                <div className="flex flex-col gap-3 border-b border-slate-200 py-4">
                     <div className="flex flex-col gap-2 text-sm text-slate-800">
                         {selectedCategories && selectedCategories.length > 0 && (
                                 <div>
@@ -139,7 +140,7 @@ export default function FilterSectionMobile() {
                                     name="category"
                                     value={category.id}
                                     className="size-4 rounded-lg accent-black cursor-pointer checked:rounded-md"
-                                    onChange={(e) => handleCheckboxChange(e, 'categoryIds')}
+                                    onChange={(e) => handleCheckboxChange(e, 'category')}
                                     checked={selectedCategories.includes(category.id)}
                                 />
                                 {category.name}
@@ -147,7 +148,7 @@ export default function FilterSectionMobile() {
                         ))}
                     </div>
                 </div>
-        
+
                 {/* Filtro de talle */}
                 <div className="flex flex-col gap-3 border-b border-slate-200 py-5">
                     <label className="block uppercase text-sm font-semibold">Talle</label>
@@ -159,7 +160,7 @@ export default function FilterSectionMobile() {
                                     name="talle"
                                     value={size.id}
                                     className="size-4 rounded-lg accent-black cursor-pointer checked:rounded-md"
-                                    onChange={(e) => handleCheckboxChange(e, 'sizeIds')}
+                                    onChange={(e) => handleCheckboxChange(e, 'size')}
                                     checked={selectedSizes.includes(size.id)}
                                 />
                                 {size.name}
@@ -167,7 +168,7 @@ export default function FilterSectionMobile() {
                         ))}
                     </div>
                 </div>
-        
+
                 {/* Filtro de color */}
                 <div className="flex flex-col gap-3 border-b border-slate-200 py-5">
                     <label className="block uppercase text-sm font-semibold">Color</label>
@@ -177,11 +178,11 @@ export default function FilterSectionMobile() {
                                 <input
                                 type="checkbox"
                                 value={color.id}
-                                onChange={(e) => handleCheckboxChange(e, "colorIds")}
-                                className="peer sr-only"
+                                onChange={(e) => handleCheckboxChange(e, "color")}
                                 checked={selectedColors.includes(color.id)}
+                                className="peer sr-only"
                                 />
-        
+
                                 <div
                                 className="
                                     size-8
@@ -200,21 +201,20 @@ export default function FilterSectionMobile() {
                     </div>
                 </div>
         
-                {/* Filtro de precio */}
-                <div className="py-5 flex flex-col gap-3">
+               {/* Filtro de precio */}
+                <div className="flex flex-col gap-3 border-b border-slate-200 py-5">
                     <label className="block uppercase text-sm font-semibold">Rango de Precios</label>
                     <input 
                         type="range" 
                         min="0" 
                         max="500" 
-                        value={selectedPriceRange ? selectedPriceRange[1] : 500}
+                        value={price}
                         onChange={handlePriceChange}
                         className="w-full accent-black cursor-pointer" 
-                        checked={selectedPriceRange ? selectedPriceRange[1] === selectedPriceRange[1] : false}
                     />
                     <div className="flex justify-between text-sm mt-2">
                         <span>${selectedPriceRange[0]}</span>
-                        <span>${selectedPriceRange[1]}</span>
+                        <span>${price}</span>
                     </div>
                 </div>
             </div>

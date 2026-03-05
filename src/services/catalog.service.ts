@@ -65,7 +65,7 @@ export async function getProductsPopular() {
 export interface QueryPaginationDto {
   page?: number;
   limit?: number;
-  sort?: "price-asc" | "price-desc" | "newest"
+  sort?: "price-asc" | "price-desc" | "recent" | "name-asc" | "name-desc";
 }
 
 export async function getProductsSearch(
@@ -113,12 +113,25 @@ export async function getProductsSearch(
 
   if (sort === "price-desc") {
     filteredProducts.sort((a,b)=>b.basePrice-a.basePrice)
+    console.log(filteredProducts)
   }
 
-  if (sort === "newest") {
+  if (sort === "recent") {
     filteredProducts.sort((a,b)=>
       new Date(b.createdAt).getTime() -
       new Date(a.createdAt).getTime()
+    )
+  }
+
+  if (sort === "name-asc") {
+    filteredProducts.sort((a,b)=>
+      a.name.localeCompare(b.name)
+    )
+  }
+
+  if (sort === "name-desc") {
+    filteredProducts.sort((a,b)=>
+      b.name.localeCompare(a.name)
     )
   }
 
