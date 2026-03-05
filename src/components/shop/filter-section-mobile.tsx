@@ -1,48 +1,78 @@
 'use client';
-import { FiltersProducts } from "@/app/tienda/page";
+
 import { categories } from "@/domain/categories";
 import { colors } from "@/domain/colors";
 import { sizes } from "@/domain/sizes";
 import { Filter, X } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react";
 
-interface FilterSectionMobileProps {
-    filters: FiltersProducts;
-    setFilters: React.Dispatch<React.SetStateAction<FiltersProducts>>;
-}
 
-export default function FilterSectionMobile({filters, setFilters}: FilterSectionMobileProps) {
+export default function FilterSectionMobile() {
     const [openMenu, setOpenMenu] = useState(false);
-    
-    const [priceRange, setPriceRange] = useState([0, 500]);
+    const router = useRouter()
+    const searchParams = useSearchParams()
+
+    function updateUrl(param: string, value: string) {
+
+        const params = new URLSearchParams(searchParams.toString())
+
+        const current = params.get(param)
+
+        if (!current) {
+            params.set(param, value)
+        } else {
+
+            const values = current.split(",")
+
+            if (values.includes(value)) {
+            const filtered = values.filter(v => v !== value)
+
+            if (filtered.length === 0) params.delete(param)
+            else params.set(param, filtered.join(","))
+            } else {
+            params.set(param, [...values, value].join(","))
+            }
+        }
+
+        params.set("page", "1") // reset paginación
+
+        router.push(`/tienda?${params.toString()}`)
+    }
     const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = Number(e.target.value);
-        setPriceRange([0, value]);
-        setFilters(prev => ({
-            ...prev,
-            priceRange: [0, value],
-        }));
+
+    const value = e.target.value
+
+    const params = new URLSearchParams(searchParams.toString())
+
+    params.set("minPrice", "0")
+    params.set("maxPrice", value)
+    params.set("page", "1")
+
+    router.push(`/tienda?${params.toString()}`)
     }
 
-    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, filterType: 'categoryIds' | 'sizeIds' | 'colorIds') => {
-        const value = e.target.value;
-        setFilters(prev => {
-            const currentValues = Array.isArray(prev[filterType]) ? prev[filterType] : [];
-            if (e.target.checked) {
-                return {
-                    ...prev,
-                    [filterType]: [...currentValues, value],
-                };
-            } else {
-                return {
-                    ...prev,
-                    [filterType]: currentValues.filter(v => v !== value),
-                };
-            }
-        });
+
+    const handleCheckboxChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    param: string
+    ) => {
+
+    const value = e.target.value
+
+    updateUrl(param, value)
     }
+
+    const selectedCategories = searchParams.get("category")?.split(",") || []
+
+    const selectedSizes = searchParams.get("size")?.split(",") || []
+
+    const selectedColors = searchParams.get("color")?.split(",") || []
+
+    const selectedPriceRange = searchParams.get("priceRange")?.split("-").map(Number) || [0, 500]
+
     return (
-        <div className="flex items-center w-full p-2 lg:hidden col-span-4 ">
+        <div className="h-max flex items-center w-full p-2 lg:hidden col-span-4 ">
             <div className="grid grid-cols-2 w-full  gap-6">
                 <select className="w-full bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md cursor-pointer appearance-none pr-8 bg-no-repeat bg-right" style={{backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`, backgroundPosition: 'right 8px center'}}>
                     <option value="">Ordenar por</option>
@@ -76,24 +106,24 @@ export default function FilterSectionMobile({filters, setFilters}: FilterSection
                 {/* Filtro utilizados */}
                 <div className="flex flex-col gap-3 border-b border-slate-200 pb-4">
                     <div className="flex flex-col gap-2 text-sm text-slate-800">
-                        {filters.categoryIds && filters.categoryIds.length > 0 && (
+                        {selectedCategories && selectedCategories.length > 0 && (
                                 <div>
-                                    <span className="font-medium">Categorías:</span> {filters.categoryIds.map(id => categories.find(c => c.id === id)?.name).join(', ')}
+                                    <span className="font-medium">Categorías:</span> {selectedCategories.map(id => categories.find(c => c.id === id)?.name).join(', ')}
                                 </div>
                         )}
-                        {filters.sizeIds && filters.sizeIds.length > 0 && (
+                        {selectedSizes && selectedSizes.length > 0 && (
                             <div>
-                                <span className="font-medium">Talles:</span> {filters.sizeIds.map(id => sizes.find(s => s.id === id)?.name).join(', ')}
+                                <span className="font-medium">Talles:</span> {selectedSizes.map(id => sizes.find(s => s.id === id)?.name).join(', ')}
                             </div>
                         )}
-                        {filters.colorIds && filters.colorIds.length > 0 && (
+                        {selectedColors && selectedColors.length > 0 && (
                             <div>
-                                <span className="font-medium">Colores:</span> {filters.colorIds.map(id => colors.find(c => c.id === id)?.name).join(', ')}
+                                <span className="font-medium">Colores:</span> {selectedColors.map(id => colors.find(c => c.id === id)?.name).join(', ')}
                             </div>
                         )}
-                        {filters.priceRange && (
+                        {selectedPriceRange && (
                             <div>
-                                <span className="font-medium">Precio:</span> ${filters.priceRange[0]} - ${filters.priceRange[1]}
+                                <span className="font-medium">Precio:</span> ${selectedPriceRange[0]} - ${selectedPriceRange[1]}
                             </div>
                         )}
                     </div>
@@ -110,6 +140,7 @@ export default function FilterSectionMobile({filters, setFilters}: FilterSection
                                     value={category.id}
                                     className="size-4 rounded-lg accent-black cursor-pointer checked:rounded-md"
                                     onChange={(e) => handleCheckboxChange(e, 'categoryIds')}
+                                    checked={selectedCategories.includes(category.id)}
                                 />
                                 {category.name}
                             </label>
@@ -129,6 +160,7 @@ export default function FilterSectionMobile({filters, setFilters}: FilterSection
                                     value={size.id}
                                     className="size-4 rounded-lg accent-black cursor-pointer checked:rounded-md"
                                     onChange={(e) => handleCheckboxChange(e, 'sizeIds')}
+                                    checked={selectedSizes.includes(size.id)}
                                 />
                                 {size.name}
                             </label>
@@ -147,6 +179,7 @@ export default function FilterSectionMobile({filters, setFilters}: FilterSection
                                 value={color.id}
                                 onChange={(e) => handleCheckboxChange(e, "colorIds")}
                                 className="peer sr-only"
+                                checked={selectedColors.includes(color.id)}
                                 />
         
                                 <div
@@ -174,13 +207,14 @@ export default function FilterSectionMobile({filters, setFilters}: FilterSection
                         type="range" 
                         min="0" 
                         max="500" 
-                        value={priceRange[1]}
+                        value={selectedPriceRange ? selectedPriceRange[1] : 500}
                         onChange={handlePriceChange}
                         className="w-full accent-black cursor-pointer" 
+                        checked={selectedPriceRange ? selectedPriceRange[1] === selectedPriceRange[1] : false}
                     />
                     <div className="flex justify-between text-sm mt-2">
-                        <span>${priceRange[0]}</span>
-                        <span>${priceRange[1]}</span>
+                        <span>${selectedPriceRange[0]}</span>
+                        <span>${selectedPriceRange[1]}</span>
                     </div>
                 </div>
             </div>

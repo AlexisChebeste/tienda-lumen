@@ -15,7 +15,7 @@ export default function ProductCard({ product }: { product: CatalogProduct }) {
     );
 
     return (
-        <Link href={`/producto/${product.slug}`} key={product.id} className="group relative flex flex-col overflow-hidden rounded-md ">
+        <Link href={`/producto/${product.slug}`} key={product.id} className="group relative flex flex-col overflow-hidden rounded-md p-1">
             <div className="aspect-square w-full bg-muted relative overflow-hidden">
                 <img
                     src={product.images.find(img => img.isMain)?.url || product.images[0]?.url || "/placeholder.png"}

@@ -12,6 +12,7 @@ export interface CatalogProduct {
   basePrice: number;
   category: Category;
   details: string[];
+  createdAt: string;
   variants: {
     id: string;
     price: number;

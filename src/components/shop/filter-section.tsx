@@ -1,48 +1,78 @@
 'use client';
 
-import { FiltersProducts } from "@/app/tienda/page";
-import { CatalogProduct } from "@/domain/catalog.types";
 import { categories } from "@/domain/categories";
 import { colors } from "@/domain/colors";
 import { sizes } from "@/domain/sizes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation"
 
-interface FilterSectionProps {
-    filters: FiltersProducts;
-    setFilters: React.Dispatch<React.SetStateAction<FiltersProducts>>;
-}
+export default function FilterSection() {
 
-export default function FilterSection({filters, setFilters}: FilterSectionProps) {
+    const router = useRouter()
+    const searchParams = useSearchParams()
 
+    function updateUrl(param: string, value: string) {
+        const params = new URLSearchParams(searchParams.toString())
 
-    const [priceRange, setPriceRange] = useState([0, 500]);
-    const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = Number(e.target.value);
-        setPriceRange([0, value]);
-        setFilters(prev => ({
-            ...prev,
-            priceRange: [0, value],
-        }));
-    }
+    
+        if (param === "priceRange") {
+            params.set(param, value)
+        } else {
+            const current = params.get(param)
 
-    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, filterType: 'categoryIds' | 'sizeIds' | 'colorIds') => {
-        const value = e.target.value;
-        setFilters(prev => {
-            const currentValues = Array.isArray(prev[filterType]) ? prev[filterType] : [];
-            if (e.target.checked) {
-                return {
-                    ...prev,
-                    [filterType]: [...currentValues, value],
-                };
+            if (!current) {
+            params.set(param, value)
             } else {
-                return {
-                    ...prev,
-                    [filterType]: currentValues.filter(v => v !== value),
-                };
+            const values = current.split(",")
+
+            if (values.includes(value)) {
+                const filtered = values.filter(v => v !== value)
+
+                if (filtered.length === 0) params.delete(param)
+                else params.set(param, filtered.join(","))
+            } else {
+                params.set(param, [...values, value].join(","))
             }
-        });
+            }
+        }
+
+        params.set("page", "1") // Resetear a página 1 al cambiar filtros
+
+        router.push(`/tienda?${params.toString()}`)
+    }
+    const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPrice(Number(e.target.value))
     }
 
+    
+
+    const handleCheckboxChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    param: string
+    ) => {
+
+    const value = e.target.value
+
+    updateUrl(param, value)
+    }
+    
+    const selectedCategories = searchParams.get("category")?.split(",") || []
+
+    const selectedSizes = searchParams.get("size")?.split(",") || []
+
+    const selectedColors = searchParams.get("color")?.split(",") || []
+
+    const selectedPriceRange = searchParams.get("priceRange")?.split("-").map(Number) || [0, 500]
+
+const [price, setPrice] = useState(selectedPriceRange[1])
+
+useEffect(() => {
+    const timeout = setTimeout(() => {
+        updateUrl("priceRange", `0-${price}`)
+    }, 400) // 400ms debounce
+
+    return () => clearTimeout(timeout)
+    }, [price])
   return (
     <div className="w-full  hidden py-4 lg:flex flex-col gap-5 p-2">
 
@@ -51,24 +81,24 @@ export default function FilterSection({filters, setFilters}: FilterSectionProps)
         {/* Filtro utilizados */}
         <div className="flex flex-col gap-3 border-b border-slate-200 pb-4">
             <div className="flex flex-col gap-2 text-sm text-slate-800">
-                {filters.categoryIds && filters.categoryIds.length > 0 && (
+                {selectedCategories && selectedCategories.length > 0 && (
                         <div>
-                            <span className="font-medium">Categorías:</span> {filters.categoryIds.map(id => categories.find(c => c.id === id)?.name).join(', ')}
+                            <span className="font-medium">Categorías:</span> {selectedCategories.map(id => categories.find(c => c.id === id)?.name).join(', ')}
                         </div>
                 )}
-                {filters.sizeIds && filters.sizeIds.length > 0 && (
+                {selectedSizes && selectedSizes.length > 0 && (
                     <div>
-                        <span className="font-medium">Talles:</span> {filters.sizeIds.map(id => sizes.find(s => s.id === id)?.name).join(', ')}
+                        <span className="font-medium">Talles:</span> {selectedSizes.map(id => sizes.find(s => s.id === id)?.name).join(', ')}
                     </div>
                 )}
-                {filters.colorIds && filters.colorIds.length > 0 && (
+                {selectedColors && selectedColors.length > 0 && (
                     <div>
-                        <span className="font-medium">Colores:</span> {filters.colorIds.map(id => colors.find(c => c.id === id)?.name).join(', ')}
+                        <span className="font-medium">Colores:</span> {selectedColors.map(id => colors.find(c => c.id === id)?.name).join(', ')}
                     </div>
                 )}
-                {filters.priceRange && (
+                {selectedPriceRange && (
                     <div>
-                        <span className="font-medium">Precio:</span> ${filters.priceRange[0]} - ${filters.priceRange[1]}
+                        <span className="font-medium">Precio:</span> ${selectedPriceRange[0]} - ${selectedPriceRange[1]}
                     </div>
                 )}
             </div>
@@ -84,7 +114,8 @@ export default function FilterSection({filters, setFilters}: FilterSectionProps)
                             name="category"
                             value={category.id}
                             className="size-4 rounded-lg accent-black cursor-pointer checked:rounded-md"
-                            onChange={(e) => handleCheckboxChange(e, 'categoryIds')}
+                            onChange={(e) => handleCheckboxChange(e, 'category')}
+                            checked={selectedCategories.includes(category.id)}
                         />
                         {category.name}
                     </label>
@@ -103,7 +134,8 @@ export default function FilterSection({filters, setFilters}: FilterSectionProps)
                             name="talle"
                             value={size.id}
                             className="size-4 rounded-lg accent-black cursor-pointer checked:rounded-md"
-                            onChange={(e) => handleCheckboxChange(e, 'sizeIds')}
+                            onChange={(e) => handleCheckboxChange(e, 'size')}
+                            checked={selectedSizes.includes(size.id)}
                         />
                         {size.name}
                     </label>
@@ -120,7 +152,8 @@ export default function FilterSection({filters, setFilters}: FilterSectionProps)
                         <input
                         type="checkbox"
                         value={color.id}
-                        onChange={(e) => handleCheckboxChange(e, "colorIds")}
+                        onChange={(e) => handleCheckboxChange(e, "color")}
+                        checked={selectedColors.includes(color.id)}
                         className="peer sr-only"
                         />
 
@@ -149,13 +182,13 @@ export default function FilterSection({filters, setFilters}: FilterSectionProps)
                 type="range" 
                 min="0" 
                 max="500" 
-                value={priceRange[1]}
+                value={price}
                 onChange={handlePriceChange}
                 className="w-full accent-black cursor-pointer" 
             />
             <div className="flex justify-between text-sm mt-2">
-                <span>${priceRange[0]}</span>
-                <span>${priceRange[1]}</span>
+                <span>${selectedPriceRange[0]}</span>
+                <span>${price}</span>
             </div>
         </div>
     </div>

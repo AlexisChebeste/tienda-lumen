@@ -1,4 +1,4 @@
-import { FiltersProducts } from "@/app/tienda/page";
+
 import { CatalogProduct, ProductVariant } from "@/domain/catalog.types";
 import { categories } from "@/domain/categories";
 import { colors } from "@/domain/colors";
@@ -65,60 +65,101 @@ export async function getProductsPopular() {
 export interface QueryPaginationDto {
   page?: number;
   limit?: number;
+  sort?: "price-asc" | "price-desc" | "newest"
 }
 
-export async function getProductsSearch(filters: FiltersProducts, queryPaginationDto: QueryPaginationDto): Promise<{ 
-  data: CatalogProduct[]; 
-  total: number; 
-  page: number; 
-  limit: number; 
-}> {
-  const { page = 1, limit = 10 } = queryPaginationDto;
+export async function getProductsSearch(
+  filters: any,
+  queryPaginationDto: QueryPaginationDto
+) {
 
-  const {
-    categoryIds,
-    colorIds,
-    sizeIds,
-    priceRange,
-  } = filters;
+  const { page = 1, limit = 12, sort } = queryPaginationDto
 
-  let filteredProducts = await getCatalogProducts();
+  let filteredProducts = await getCatalogProducts()
 
-  if (categoryIds.length > 0) {
-    filteredProducts = filteredProducts.filter(p => categoryIds.includes(p.category.id));
+  const { category, color, size, priceRange } = filters
+
+  if (category.length) {
+    filteredProducts = filteredProducts.filter(p =>
+      category.includes(p.category.id)
+    )
   }
 
-  if (colorIds.length > 0) {
-    filteredProducts = filteredProducts.filter(p => p.variants.some(v => colorIds.includes(v.color.id)));
+  if (color.length) {
+    filteredProducts = filteredProducts.filter(p =>
+      p.variants.some(v => color.includes(v.color.id))
+    )
   }
 
-  if (sizeIds.length > 0) {
-    filteredProducts = filteredProducts.filter(p => p.variants.some(v => sizeIds.includes(v.size.id)));
+  if (size.length) {
+    filteredProducts = filteredProducts.filter(p =>
+      p.variants.some(v => size.includes(v.size.id))
+    )
   }
 
-  if (priceRange) {
-    const [minPrice, maxPrice] = priceRange;
-    filteredProducts = filteredProducts.filter(p => 
-      p.variants.some(v => v.price >= minPrice && v.price <= maxPrice)
-    );
+  if (  priceRange) {
+    const [min, max] = priceRange
+
+    filteredProducts = filteredProducts.filter(p =>
+      p.variants.some(v => v.price >= min && v.price <= max)
+    )
   }
 
-  const total = filteredProducts.length;
-  const start = (page - 1) * limit;
-  const end = start + limit;
-  const paginatedProducts = filteredProducts.slice(start, end);
+  // sorting
 
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve({
-        data: paginatedProducts,
-        total,
-        page,
-        limit,
-      });
-    }, 500);
-  });
+  if (sort === "price-asc") {
+    filteredProducts.sort((a,b)=>a.basePrice-b.basePrice)
+  }
 
+  if (sort === "price-desc") {
+    filteredProducts.sort((a,b)=>b.basePrice-a.basePrice)
+  }
+
+  if (sort === "newest") {
+    filteredProducts.sort((a,b)=>
+      new Date(b.createdAt).getTime() -
+      new Date(a.createdAt).getTime()
+    )
+  }
+
+  const total = filteredProducts.length
+
+  const start = (page - 1) * limit
+  const end = start + limit
+
+  const paginatedProducts = filteredProducts.slice(start, end)
+
+  return {
+    data: paginatedProducts,
+    total,
+    page,
+    limit
+  }
+}
+
+export function parseFilters(searchParams: any) {
+
+  const category = searchParams.category
+    ? searchParams.category.split(",")
+    : []
+
+  const color = searchParams.color
+    ? searchParams.color.split(",")
+    : []
+
+  const size = searchParams.size
+    ? searchParams.size.split(",")
+    : []
+
+  const priceRange =
+    searchParams.priceRange ? searchParams.priceRange.split("-").map(Number) : undefined
+
+  return {
+    category,
+    color,
+    size,
+    priceRange
+  }
 }
 
 export async function getProductBySlug(slug: string): Promise<CatalogProduct | undefined> {
