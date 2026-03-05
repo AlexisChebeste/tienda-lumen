@@ -21,13 +21,13 @@ export default function ProductGallery({images, selectImage, setSelectImage}: Pr
             </div>
             <div className="order-2 md:order-1 grid grid-cols-3 md:grid-cols-1 gap-3">
                 {images.map((img, index) => (
-                    <button key={index} onClick={()=> setSelectImage(index)} aria-label={`Select image ${index + 1}`} className={`border-2 ${selectImage === index ? 'border-black' : 'border-gray-300' } rounded-md overflow-hidden h-max cursor-pointer`}>
+                    <button key={index} onClick={()=> setSelectImage(index)} aria-label={`Select image ${index + 1}`} className={`border-2 ${selectImage === index ? 'border-black' : 'border-gray-300' } rounded-md overflow-hidden cursor-pointer`}>
                         <Image 
                             src={img.url} 
                             alt={`Product Image ${index + 1}`} 
                             width={250} 
                             height={250} 
-                            className="object-cover brightness-75 hover:brightness-100 transition duration-200 hover:scale-105"/>
+                            className="object-cover h-full brightness-75 hover:brightness-100 transition duration-200 hover:scale-105"/>
                     </button>
                 ))}
             </div>

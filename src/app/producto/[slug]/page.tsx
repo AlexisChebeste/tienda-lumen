@@ -69,7 +69,7 @@ export default function ProductPage() {
                     </div>
                 ) : product && (
                     <>
-                        <section className="mx-auto py-5 lg:py-10 grid grid-cols-1 gap-6 lg:gap-10 lg:grid-cols-2 items-start">
+                        <section className="mx-auto py-5 lg:py-10 grid grid-cols-1 gap-6 lg:gap-10 lg:grid-cols-2">
                             <ProductGallery images={product.images} selectImage={selectImage} setSelectImage={setSelectImage} />
                             <div className="flex flex-col gap-2 min-h-full max-w-lg">
                                 <div className="flex flex-col gap-1">
