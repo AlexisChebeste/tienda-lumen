@@ -76,7 +76,7 @@ export default function ProductInfo({product, setSelectImage}: {product: Catalog
     (i) =>
         i.id === selectedVariant?.id &&
         i.size === selectedVariant?.size.name &&
-        i.color === selectedVariant?.color.name
+        i.colorId === selectedVariant?.color.name
     );
 
     const quantityInCart = cartItem?.quantity ?? 0;
