@@ -27,7 +27,8 @@ export default function ProductGallery({images, selectImage, setSelectImage}: Pr
                             alt={`Product Image ${index + 1}`} 
                             width={250} 
                             height={250} 
-                            className="object-cover h-full brightness-75 hover:brightness-100 transition duration-200 hover:scale-105"/>
+                            className="object-cover h-full brightness-75 hover:brightness-100 transition duration-200 hover:scale-105"
+                        />
                     </button>
                 ))}
             </div>

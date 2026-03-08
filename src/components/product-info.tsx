@@ -40,7 +40,8 @@ export default function ProductInfo({product, setSelectImage}: {product: Catalog
                 name: product.name,
                 price: product.basePrice,
                 image: selectedVariant.image,
-                color: selectedVariant.color.name,
+                colorId: selectedVariant.color.id,
+                colorName: selectedVariant.color.name,
                 size: selectedVariant.size.name,
                 sku: selectedVariant.sku,
                 stock: selectedVariant.stock

@@ -15,6 +15,7 @@ export default function ProductPopular({ product }: { product: CatalogProduct })
                 <img
                     src={product.images.find(img => img.isMain)?.url || product.images[0]?.url || "/placeholder.png"}
                     alt={product.name}
+                    loading="lazy"
                     className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300 ease-in-out"
                 />
             </div>

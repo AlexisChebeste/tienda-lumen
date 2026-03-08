@@ -19,7 +19,7 @@ export default async function ShopPage({ searchParams }: Props) {
   
   const pagination = {
     page: Number(params.page) || 1,
-    limit: 10,
+    limit: 3,
     sort: params.sort as "price-asc" | "price-desc" |  "recent" | "name-asc" | "name-desc" || 'recent'
   }
 

@@ -1,6 +1,8 @@
 "use client"
 
-import { createContext, useContext, useState, type ReactNode } from "react"
+import { colors } from "@/domain/colors";
+import { productImages } from "@/mock/product-images.mock";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
 
 export interface CartItem {
   id: string;          // variantId
@@ -8,7 +10,8 @@ export interface CartItem {
   name: string;
   price: number;
   image: string;
-  color: string;
+  colorId: string;
+  colorName: string;
   size: string;
   sku: string;
   quantity: number;
@@ -33,6 +36,20 @@ const CartContext = createContext<CartContextType | undefined>(undefined)
 export function CartProvider({children}: {children: ReactNode}) {
     const [items, setItems] = useState<CartItem[]>([])
 
+    // cargar carrito
+    useEffect(() => {
+      const savedCart = localStorage.getItem("cart")
+
+      if (savedCart) {
+        setItems(JSON.parse(savedCart))
+      }
+    }, [])
+
+    // guardar carrito
+    useEffect(() => {
+      localStorage.setItem("cart", JSON.stringify(items))
+    }, [items])
+
 
     const addItem = (
       item: Omit<CartItem, "quantity">,
@@ -44,7 +61,7 @@ export function CartProvider({children}: {children: ReactNode}) {
         const existingItem = currentItems.find((i) => 
           i.id === item.id && 
           i.size === item.size && 
-          i.color === item.color
+          i.colorId === item.colorId
         )
         const existingQuantity = existingItem?.quantity ?? 0
         const maxAllowed = item.stock
@@ -60,13 +77,19 @@ export function CartProvider({children}: {children: ReactNode}) {
 
         if(existingItem) {
           return currentItems.map((i) => 
-              i.id === item.id && i.size === item.size && i.color === item.color ? 
-              {...i, quantity: i.quantity + totalAdd} 
+              i.id === item.id && i.size === item.size && i.colorId === item.colorId ? 
+              {...i,quantity: i.quantity + totalAdd} 
               : i
           )
         }
 
-        return [...currentItems, {...item, quantity: totalAdd}]
+        const newItem: CartItem = {
+          ...item,
+          quantity: totalAdd,
+          image: productImages.find(img => img.productId === item.productId && img.url.includes(colors.find(c => c.id === item.colorId)!.name.replace(/\s/g, '').toLowerCase()))?.url || ''
+        }
+
+        return [...currentItems, newItem]
       })
       
       return result

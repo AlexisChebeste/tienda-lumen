@@ -47,8 +47,6 @@ export default function FilterSectionMobile() {
             setPrice(Number(e.target.value))
         }
     
-        
-    
         const handleCheckboxChange = (
         e: React.ChangeEvent<HTMLInputElement>,
         param: string
@@ -81,7 +79,7 @@ export default function FilterSectionMobile() {
         <div className="h-max flex items-center w-full p-2 lg:hidden col-span-4 ">
             <div className="grid grid-cols-2 w-full  gap-6">
                 <SortSelect />
-                <button className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded pl-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md  cursor-pointer flex items-center gap-2 " onClick={() => setOpenMenu(!openMenu)} >
+                <button className="w-full bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded pl-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md  cursor-pointer flex items-center gap-2 " onClick={() => setOpenMenu(!openMenu)} >
                     <Filter className="size-4 text-slate-700" />
                     Filtrar por
                 </button>

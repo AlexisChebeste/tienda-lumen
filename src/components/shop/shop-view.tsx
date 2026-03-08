@@ -7,6 +7,7 @@ import FilterSectionMobile from "./filter-section-mobile";
 import Header from "../header";
 import { SortSelect } from "./sort-select";
 import { Suspense } from "react";
+import Pagination from "./pagination";
 
 type Props = {
   products: CatalogProduct[]
@@ -23,8 +24,7 @@ export default function ShopView({
 }: Props) {
     const totalPages = Math.ceil(total / limit);
     return (
-        <div className="flex min-h-screen flex-col ">
-      <Header />
+      <div className="flex min-h-screen flex-col ">
 
       <main className="flex-1 grid grid-cols-1 lg:grid-cols-5 max-w-7xl mx-auto w-full p-4 gap-6 items-start h-full">
 
@@ -54,17 +54,16 @@ export default function ShopView({
                 <ProductCard key={product.id} product={product} />
               )))}
             </div>
-            {/* {totalPages > 1 && (
+            {totalPages > 1 && (
                 <div className="flex justify-center mt-10">
                     <Pagination page={page} totalPages={totalPages} />
                 </div>
-            )} */}
+            )}
           </section>
       )}
 
       </main>
 
-      <Footer />
     </div>
     )
 }
