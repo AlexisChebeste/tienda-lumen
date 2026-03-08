@@ -5,12 +5,31 @@ import { CartItem, useCart } from "@/lib/card-context";
 import { ShieldCheck, Truck } from "lucide-react";
 import { useState } from "react";
 import Image from "next/image"
+import Link from "next/link";
 
 
 export default function CheckoutPage() {
     const {totalPrice, items} = useCart()
 
-    const [envio, setEnvio] = useState(9.99)
+    const [envio, setEnvio] = useState(totalPrice > 100 ? 0 : 9.99)
+
+    if (items.length === 0) {
+    return (
+      <div className="flex min-h-screen flex-col">
+        <main className="flex-1 flex flex-col max-w-7xl mx-auto w-full p-6 gap-6 items-start h-full">
+          <div className="text-center m-auto">
+            <h1 className="font-serif text-3xl font-light tracking-wide">Tu carrito está vacío</h1>
+            <p className="mt-4 text-muted-foreground">
+              Agrega productos a tu carrito para continuar con la compra.
+            </p>
+            <button className="mt-10 rounded-none px-12 py-6 text-sm tracking-widest uppercase">
+              <Link href="/tienda">Ver Tienda</Link>
+            </button>
+          </div>
+        </main>
+      </div>
+    )
+  }
 
     return (
         <div className="flex min-h-screen flex-col">
@@ -24,15 +43,15 @@ export default function CheckoutPage() {
                             <h2 className="text-lg font-semibold uppercase tracking-wide text-gray-600">Información de contacto</h2>
                             <div className="flex flex-col gap-1">
                                 <label htmlFor="email" className="text-sm font-medium text-gray-700">Correo electrónico</label>
-                                <input type="email" id="email" name="email" className="border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="tu@email.com" />
+                                <input type="email" id="email" name="email" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" placeholder="tu@email.com" />
                             </div>
                             <div className="flex flex-col gap-1">
                                 <label htmlFor="name" className="text-sm font-medium text-gray-700">Nombre completo</label>
-                                <input type="text" id="name" name="name" className="border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Tu Nombre Completo" />
+                                <input type="text" id="name" name="name" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" placeholder="Tu Nombre Completo" />
                             </div>
                             <div className="flex flex-col gap-1">
                                 <label htmlFor="phone" className="text-sm font-medium text-gray-700">Número de teléfono</label>
-                                <input type="tel" id="phone" name="phone" className="border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="+1 234 567 8900" />
+                                <input type="tel" id="phone" name="phone" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" placeholder="+1 234 567 8900" />
                             </div>
                         </section>
 
@@ -42,16 +61,16 @@ export default function CheckoutPage() {
                             <h2 className="text-lg font-semibold uppercase tracking-wide text-gray-600">Dirección de envío</h2>
                             <div className="flex flex-col gap-1">
                                 <label htmlFor="address" className="text-sm font-medium text-gray-700">Dirección</label>
-                                <input type="text" id="address" name="address" className="border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Calle, número, etc." />
+                                <input type="text" id="address" name="address" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" placeholder="Calle, número, etc." />
                             </div>
                             <div className="flex flex-col gap-1 lg:flex-row lg:gap-4 w-full">
                                 <div className="flex flex-col gap-1 w-full">
                                     <label htmlFor="city" className="text-sm font-medium text-gray-700">Ciudad</label>
-                                    <input type="text" id="city" name="city" className="border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ciudad" />
+                                    <input type="text" id="city" name="city" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" placeholder="Ciudad" />
                                 </div>
                                 <div className="flex flex-col gap-1 w-full">
                                     <label htmlFor="postalCode" className="text-sm font-medium text-gray-700">Código postal</label>
-                                    <input type="text" id="postalCode" name="postalCode" className="border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Código postal" />
+                                    <input type="text" id="postalCode" name="postalCode" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" placeholder="Código postal" />
                                 </div>  
                             </div>
                         </section>
@@ -104,21 +123,21 @@ export default function CheckoutPage() {
                                 <label htmlFor="creditCardNumber">
                                     Número de Tarjeta
                                 </label>
-                                <input type="text" id="creditCardNumber" placeholder="1234 5678 9012 3456" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                <input type="text" id="creditCardNumber" placeholder="1234 5678 9012 3456" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" />
 
                                 <div className="flex gap-4">
                                     <div className="flex flex-col w-full">
                                         <label htmlFor="creditCardExpiry">
                                             Fecha de Expiración
                                         </label>
-                                        <input type="text" id="creditCardExpiry" placeholder="MM/AA" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                        <input type="text" id="creditCardExpiry" placeholder="MM/AA" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" />
                                     </div>
                                     
                                     <div className="w-full flex flex-col flex-1/3">
                                         <label htmlFor="creditCardCVC">
                                             CVC
                                         </label>
-                                        <input type="text" id="creditCardCVC" placeholder="123" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                        <input type="text" id="creditCardCVC" placeholder="123" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" />
                                     </div>
                                 </div>
 
@@ -136,6 +155,7 @@ export default function CheckoutPage() {
                             Pagar
                         </button>
                     </form>
+
                     <section className="p-8 border h-max  bg-white shadow w-full sticky top-24 lg:col-span-1">
                         <h2 className="text-lg font-semibold  uppercase tracking-wide text-gray-600">Resumen del pedido</h2>
                         
