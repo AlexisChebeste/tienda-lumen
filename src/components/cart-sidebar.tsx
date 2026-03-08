@@ -50,7 +50,7 @@ export default function CartSidebar ({isOpen, onClose} : CartSidebarProps) {
                                 
                                 {items.map((item) => {
                                     return(
-                                        <div key={`${item.id}-${item.size}-${item.color}`} className="flex gap-2">
+                                        <div key={`${item.id}-${item.size}-${item.colorId}`} className="flex gap-2">
                                             <div className="relative w-28  overflow-hidden bg-muted rounded-md">
                                                 <Image
                                                     src={item.image}
