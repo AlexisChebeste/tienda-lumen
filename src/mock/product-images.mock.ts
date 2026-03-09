@@ -83,15 +83,6 @@ export const productImages: ProductImage[] = [
         colorId: "c9"
     },
     {
-        id: "img10",
-        productId: "4",
-        url: "/product/shirt-couture-negro.webp",
-        alt: "Camiseta couture negra",
-        position: 2,
-        isMain: false,
-        colorId: "c2"
-    },
-    {
         id: "img11",
         productId: "4",
         url: "/product/shirt-couture-blanco.webp",
@@ -99,6 +90,15 @@ export const productImages: ProductImage[] = [
         position: 1,
         isMain: true,
         colorId: "c1"
+    },
+    {
+        id: "img10",
+        productId: "4",
+        url: "/product/shirt-couture-negro.webp",
+        alt: "Camiseta couture negra",
+        position: 2,
+        isMain: false,
+        colorId: "c2"
     },
     {
         id: "img12",

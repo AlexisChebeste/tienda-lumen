@@ -2,7 +2,7 @@ import { CatalogProduct, ProductVariant } from "@/domain/catalog.types";
 import { Color } from "@/domain/colors";
 import { useCart } from "@/lib/card-context";
 import { uniqueColorsFromVariants } from "@/services/product.service";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 export default function ProductInfo({product, setSelectImage}: {product: CatalogProduct, setSelectImage: (index: number) => void}) {
 

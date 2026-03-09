@@ -50,7 +50,6 @@ export function CartProvider({children}: {children: ReactNode}) {
       localStorage.setItem("cart", JSON.stringify(items))
     }, [items])
 
-
     const addItem = (
       item: Omit<CartItem, "quantity">,
       totalAdd: number
@@ -86,7 +85,9 @@ export function CartProvider({children}: {children: ReactNode}) {
         const newItem: CartItem = {
           ...item,
           quantity: totalAdd,
-          image: productImages.find(img => img.productId === item.productId && img.url.includes(colors.find(c => c.id === item.colorId)!.name.replace(/\s/g, '').toLowerCase()))?.url || ''
+          image: productImages.find(
+            img => img.productId === item.productId && img.colorId === item.colorId
+          )?.url || ''
         }
 
         return [...currentItems, newItem]

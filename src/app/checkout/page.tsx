@@ -3,55 +3,150 @@
 import Divider from "@/components/divider";
 import { CartItem, useCart } from "@/lib/card-context";
 import { ShieldCheck, Truck } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image"
 import Link from "next/link";
-
+import { useRouter} from "next/navigation"
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CreateCheckoutSchema } from "@/schemas/checkout.schema";
+import { CreateOrder, Order } from "@/domain/order";
 
 export default function CheckoutPage() {
-    const {totalPrice, items} = useCart()
+    const {totalPrice, items, clearCart} = useCart()
+    const router = useRouter()
 
-    const [envio, setEnvio] = useState(totalPrice > 100 ? 0 : 9.99)
+
+    const isFreeShipping = totalPrice > 100
+
+    const [envio, setEnvio] = useState(isFreeShipping ? 0 : 9.99)
+    const [loading, setLoading] = useState(false)
+
+    const {
+        register,
+        handleSubmit,
+        formState:{errors}
+    } = useForm({
+        resolver: zodResolver(CreateCheckoutSchema),
+        mode: "onChange"
+    })
+
+    
+    async function handleCheckout(data: CreateCheckoutSchema) {
+
+        setLoading(true)
+
+        const orderData : CreateOrder= {
+            subtotal: totalPrice,
+            shipping: {
+                method: data.shipping.method,
+                price: data.shipping.method === "standard" ? (isFreeShipping ? 0 : 9.99) : 19.99
+            },
+            total: totalPrice + envio,
+            customer: {
+                nombre: data.nombre,
+                email: data.email,
+                telefono: {
+                    codigo_pais: data.telefono.codigo_pais,
+                    codigo_area: data.telefono.codigo_area && data.telefono.codigo_area.length > 0 ? data.telefono.codigo_area : "",
+                    numero: data.telefono.numero
+                },
+            },
+            items: items,
+            direccion: {
+                calle: data.direccion.calle,
+                numero: data.direccion.numero,
+                provincia: data.direccion.provincia,
+                codigo_postal: data.direccion.codigo_postal,
+            },
+            payment: {
+                method: data.payment.method,
+                status: "paid"
+            }
+        }
+
+        const res = await fetch("/api/orders", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                ...orderData
+            })
+        })
+        const result = await res.json()
+
+        const existingOrders = JSON.parse(localStorage.getItem("orders") || "[]")
+
+        existingOrders.push(data)
+
+        localStorage.setItem("orders", JSON.stringify(existingOrders))
+        clearCart()
+        
+        router.push(`/order-success/${result.orderId}`)
+    }
+
+    useEffect(()=>{
+        setEnvio(totalPrice > 100 ? 0 : 9.99)
+    },[totalPrice])
 
     if (items.length === 0) {
-    return (
-      <div className="flex min-h-screen flex-col">
-        <main className="flex-1 flex flex-col max-w-7xl mx-auto w-full p-6 gap-6 items-start h-full">
-          <div className="text-center m-auto">
-            <h1 className="font-serif text-3xl font-light tracking-wide">Tu carrito está vacío</h1>
-            <p className="mt-4 text-muted-foreground">
-              Agrega productos a tu carrito para continuar con la compra.
-            </p>
-            <button className="mt-10 rounded-none px-12 py-6 text-sm tracking-widest uppercase">
-              <Link href="/tienda">Ver Tienda</Link>
-            </button>
-          </div>
-        </main>
-      </div>
-    )
-  }
+        return (
+        <div className="flex min-h-screen flex-col">
+            <main className="flex-1 flex flex-col max-w-7xl mx-auto w-full p-6 gap-6 items-start h-full">
+            <div className="text-center m-auto">
+                <h1 className="font-serif text-3xl font-light tracking-wide">Tu carrito está vacío</h1>
+                <p className="mt-4 text-muted-foreground">
+                Agrega productos a tu carrito para continuar con la compra.
+                </p>
+                <button className="mt-10 rounded-none px-12 py-6 text-sm tracking-widest uppercase">
+                <Link href="/tienda">Ver Tienda</Link>
+                </button>
+            </div>
+            </main>
+        </div>
+        )
+    }
 
     return (
         <div className="flex min-h-screen flex-col">
             <main className="flex-1 flex flex-col max-w-7xl mx-auto w-full p-6 gap-6 items-start h-full relative">
+
                 <h1 className="text-2xl font-bold mb-4 uppercase tracking-wide">Finalizar Compra</h1>
+
                 <section className=" flex-1 gap-10 rounded grid grid-cols-1 lg:grid-cols-3 w-full">
 
-                    <form className="flex flex-col gap-4 lg:col-span-2 pb-16">
+                    <form className="flex flex-col gap-4 lg:col-span-2 pb-16" onSubmit={handleSubmit(handleCheckout)}>
 
                         <section className="flex flex-col gap-4">
                             <h2 className="text-lg font-semibold uppercase tracking-wide text-gray-600">Información de contacto</h2>
                             <div className="flex flex-col gap-1">
                                 <label htmlFor="email" className="text-sm font-medium text-gray-700">Correo electrónico</label>
-                                <input type="email" id="email" name="email" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" placeholder="tu@email.com" />
+                                <input type="email" id="email" {...register("email")}  className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" placeholder="tu@email.com" autoComplete="email" disabled={loading}/>
+                                {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
                             </div>
                             <div className="flex flex-col gap-1">
                                 <label htmlFor="name" className="text-sm font-medium text-gray-700">Nombre completo</label>
-                                <input type="text" id="name" name="name" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" placeholder="Tu Nombre Completo" />
+                                <input type="text" id="name" {...register("nombre")}  className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" placeholder="Tu Nombre Completo" autoComplete="name" disabled={loading}/>
+                                {errors.nombre && <p className="text-sm text-red-500">{errors.nombre.message}</p>}  
                             </div>
-                            <div className="flex flex-col gap-1">
-                                <label htmlFor="phone" className="text-sm font-medium text-gray-700">Número de teléfono</label>
-                                <input type="tel" id="phone" name="phone" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" placeholder="+1 234 567 8900" />
+                            <div className="grid grid-cols-3 gap-4">
+                                <div className="flex flex-col gap-1 ">
+                                    <label htmlFor="phone" className="text-sm font-medium text-gray-700 ">Código de país</label>
+                                    <input type="tel" id="phone" {...register("telefono.codigo_pais")}  className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" placeholder="+54" autoComplete="tel" disabled={loading}/>
+                                    {errors.telefono?.codigo_pais && <p className="text-sm text-red-500">{errors.telefono.codigo_pais.message}</p>}
+                                </div>
+                                <div className="flex flex-col gap-1 ">
+                                    <label htmlFor="phone" className="text-sm font-medium text-gray-700">Código de área</label>
+                                    <input type="tel" id="phone" {...register("telefono.codigo_area")}  className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" placeholder="11" autoComplete="tel" disabled={loading}/>
+                                    {errors.telefono?.codigo_area && <p className="text-sm text-red-500">{errors.telefono.codigo_area.message}</p>}
+                                </div>
+                                <div className="flex flex-col gap-1 w-full">
+                                    <label htmlFor="phoneNumber" className="text-sm font-medium text-gray-700">Número de teléfono</label>
+                                    <input type="tel" id="phoneNumber" {...register("telefono.numero")}  className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" placeholder="1234567890" autoComplete="tel-national" disabled={loading}/>
+                                    {errors.telefono?.numero && <p className="text-sm text-red-500">{errors.telefono.numero.message}</p>}
+                                </div>
+
                             </div>
                         </section>
 
@@ -59,18 +154,33 @@ export default function CheckoutPage() {
 
                         <section className="flex flex-col gap-4">
                             <h2 className="text-lg font-semibold uppercase tracking-wide text-gray-600">Dirección de envío</h2>
+                            <div className="flex flex-col gap-1 lg:flex-row lg:gap-4 w-full">
+                                <div className="flex flex-col gap-1 w-full">
+                                    <label htmlFor="address" className="text-sm font-medium text-gray-700">Calle</label>
+                                    <input type="text" id="address" {...register("direccion.calle")} required className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" placeholder="Calle" autoComplete="address-line1" disabled={loading}/>
+                                    {errors.direccion?.calle && <p className="text-sm text-red-500">{errors.direccion.calle.message}</p>}
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                    <label htmlFor="number" className="text-sm font-medium text-gray-700">Número</label>
+                                    <input type="text" id="number" {...register("direccion.numero")} required className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" placeholder="Número" autoComplete="address-line2" disabled={loading}/>
+                                    {errors.direccion?.numero && <p className="text-sm text-red-500">{errors.direccion.numero.message}</p>}
+                                </div>
+                            </div>
                             <div className="flex flex-col gap-1">
-                                <label htmlFor="address" className="text-sm font-medium text-gray-700">Dirección</label>
-                                <input type="text" id="address" name="address" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" placeholder="Calle, número, etc." />
+                                <label htmlFor="province" className="text-sm font-medium text-gray-700">Provincia</label>
+                                <input type="text" id="province" {...register("direccion.provincia")} required className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" placeholder="Provincia" autoComplete="address-level1" disabled={loading}/>
+                                {errors.direccion?.provincia && <p className="text-sm text-red-500">{errors.direccion.provincia.message}</p>}
                             </div>
                             <div className="flex flex-col gap-1 lg:flex-row lg:gap-4 w-full">
                                 <div className="flex flex-col gap-1 w-full">
                                     <label htmlFor="city" className="text-sm font-medium text-gray-700">Ciudad</label>
-                                    <input type="text" id="city" name="city" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" placeholder="Ciudad" />
+                                    <input type="text" id="city" {...register("direccion.ciudad")} required className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" placeholder="Ciudad" autoComplete="address-level2" disabled={loading}/>
+                                    {errors.direccion?.ciudad && <p className="text-sm text-red-500">{errors.direccion.ciudad.message}</p>}
                                 </div>
                                 <div className="flex flex-col gap-1 w-full">
                                     <label htmlFor="postalCode" className="text-sm font-medium text-gray-700">Código postal</label>
-                                    <input type="text" id="postalCode" name="postalCode" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" placeholder="Código postal" />
+                                    <input type="text" id="postalCode" {...register("direccion.codigo_postal")} required className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" placeholder="Código postal" autoComplete="postal-code" disabled={loading}/>
+                                    {errors.direccion?.codigo_postal && <p className="text-sm text-red-500">{errors.direccion.codigo_postal.message}</p>}
                                 </div>  
                             </div>
                         </section>
@@ -82,7 +192,7 @@ export default function CheckoutPage() {
 
                             <div className="flex flex-col gap-3">
                                 <label className="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-stone-800 transition-colors accent-stone-800 has-checked:border-stone-800 has-checked:bg-stone-100">
-                                    <input type="radio" name="shippingMethod" value="normal" defaultChecked className="w-4 h-4 cursor-pointer" 
+                                    <input type="radio" {...register("shipping.method")} value="standard" defaultChecked className="w-4 h-4 cursor-pointer "  
                                     onChange={() => setEnvio(
                                         totalPrice > 100 ? 0 : 9.99
                                     )}
@@ -95,7 +205,7 @@ export default function CheckoutPage() {
                                 </label>
                                 
                                 <label className="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-stone-800 transition-colors accent-stone-800 has-checked:border-stone-800 has-checked:bg-stone-100">
-                                    <input type="radio" name="shippingMethod" value="express" className="w-4 h-4 cursor-pointer" 
+                                    <input type="radio" {...register("shipping.method")} value="express" className="w-4 h-4 cursor-pointer" 
                                     onChange={() => setEnvio(19.99)}
                                     />
                                     <div className="ml-3 flex-1">
@@ -114,7 +224,7 @@ export default function CheckoutPage() {
 
                             <div className="flex flex-col gap-3">
                                 <label className="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-stone-800 transition-colors accent-stone-800 has-checked:border-stone-800 has-checked:bg-stone-100">
-                                    <input type="radio" name="paymentMethod" value="creditCard" defaultChecked className="w-4 h-4 cursor-pointer" />
+                                    <input type="radio" {...register("payment.method")} value="card" defaultChecked className="w-4 h-4 cursor-pointer" />
                                     <div className="ml-3 flex-1">
                                         <p className="font-semibold text-gray-700">Tarjeta de Crédito</p>
                                     </div>
@@ -123,36 +233,39 @@ export default function CheckoutPage() {
                                 <label htmlFor="creditCardNumber">
                                     Número de Tarjeta
                                 </label>
-                                <input type="text" id="creditCardNumber" placeholder="1234 5678 9012 3456" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" />
+                                <input type="text" id="creditCardNumber" required placeholder="1234 5678 9012 3456" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" />
 
-                                <div className="flex gap-4">
-                                    <div className="flex flex-col w-full">
+                                <div className="grid grid-cols-3 gap-4">
+                                    <div className="flex flex-col w-full gap-4 col-span-2">
                                         <label htmlFor="creditCardExpiry">
                                             Fecha de Expiración
                                         </label>
-                                        <input type="text" id="creditCardExpiry" placeholder="MM/AA" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" />
+                                        <input type="text" id="creditCardExpiry" required placeholder="MM/AA" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" />
                                     </div>
                                     
-                                    <div className="w-full flex flex-col flex-1/3">
+                                    <div className="w-full flex flex-col gap-4">
                                         <label htmlFor="creditCardCVC">
                                             CVC
                                         </label>
-                                        <input type="text" id="creditCardCVC" placeholder="123" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" />
+                                        <input type="text" id="creditCardCVC" required placeholder="123" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" />
                                     </div>
                                 </div>
 
                                 <label htmlFor="creditCardHolder">
                                     Titular de la Tarjeta
                                 </label>
-                                <input type="text" id="creditCardHolder" placeholder="Nombre completo" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                <input type="text" id="creditCardHolder" required placeholder="Nombre completo" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
                             </div>
 
 
                         </section>
 
-                        <button className="mt-6 bg-primary text-primary-foreground py-4 px-6 rounded-lg font-semibold hover:bg-primary/90 transition-colors uppercase">
-                            Pagar
+                        <button className="mt-6 bg-primary text-primary-foreground py-4 px-6 rounded-lg font-semibold hover:bg-primary/90 transition-colors uppercase cursor-pointer" 
+                            type="submit" 
+                            disabled={loading}
+                        >
+                            {loading ? "Procesando..." : "Pagar"}
                         </button>
                     </form>
 
@@ -201,7 +314,7 @@ export default function CheckoutPage() {
                             </div>
                             <div className="flex justify-between text-gray-700 text-sm">
                                 <span>Envío</span>
-                                <span>${envio.toFixed(2)}</span>
+                                <span>${isFreeShipping ? '0.00' : `$${envio.toFixed(2)}`}</span>
                             </div>
                             
                         </section>
@@ -224,7 +337,6 @@ export default function CheckoutPage() {
 
                     </section>
                 </section>
-                
                 
             </main>
         </div>

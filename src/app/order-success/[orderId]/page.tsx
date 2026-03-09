@@ -17,7 +17,7 @@ export default function OrderSuccessPage() {
               Número de pedido: <span className="mx-auto  font-medium text-foreground">LMN-{Date.now().toString().slice(-8)}</span>
             </p>
             <button  className="mx-auto  mt-10 rounded-none px-12 py-6 text-sm tracking-widest uppercase">
-              <Link href="/shop">Continuar Comprando</Link>
+              <Link href="/tienda">Continuar Comprando</Link>
             </button>
         </main>
       </div>
