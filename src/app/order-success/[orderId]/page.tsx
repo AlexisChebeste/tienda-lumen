@@ -1,7 +1,16 @@
+"use client"
+
 import { ShieldCheck } from "lucide-react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 export default function OrderSuccessPage() {
+  
+    const params = useParams();
+
+    const { orderId } = params;
+
+
     return (
       <div className="flex min-h-screen bg-background flex-col">
         <main className="flex-1 flex flex-col max-w-7xl mx-auto w-full p-6 gap-6 items-start justify-center h-full relative ">
@@ -14,7 +23,7 @@ export default function OrderSuccessPage() {
               Gracias por tu compra. Recibirás un correo de confirmación con los detalles de tu pedido.
             </p>
             <p className="mx-auto  mt-2 text-sm text-muted-foreground">
-              Número de pedido: <span className="mx-auto  font-medium text-foreground">LMN-{Date.now().toString().slice(-8)}</span>
+              Número de pedido: <span className="mx-auto  font-medium text-foreground">LMN-{orderId}</span>
             </p>
             <button  className="mx-auto  mt-10 rounded-none px-12 py-6 text-sm tracking-widest uppercase">
               <Link href="/tienda">Continuar Comprando</Link>

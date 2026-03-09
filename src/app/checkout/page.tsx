@@ -10,7 +10,8 @@ import { useRouter} from "next/navigation"
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateCheckoutSchema } from "@/schemas/checkout.schema";
-import { CreateOrder, Order } from "@/domain/order";
+import { CreateOrder } from "@/domain/order";
+import { IMaskInput } from 'react-imask';
 
 export default function CheckoutPage() {
     const {totalPrice, items, clearCart} = useCart()
@@ -233,28 +234,57 @@ export default function CheckoutPage() {
                                 <label htmlFor="creditCardNumber">
                                     Número de Tarjeta
                                 </label>
-                                <input type="text" id="creditCardNumber" required placeholder="1234 5678 9012 3456" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" />
+                                <IMaskInput 
+                                    id="creditCardNumber"
+                                    mask="0000 0000 0000 0000" 
+                                    disabled={loading}
+                                    required
+                                    lazy={true}
+                                    className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800"
+                                    placeholder="1234 5678 9012 3456"
+                                    autoComplete="cc-number"
+                                />
 
                                 <div className="grid grid-cols-3 gap-4">
                                     <div className="flex flex-col w-full gap-4 col-span-2">
                                         <label htmlFor="creditCardExpiry">
                                             Fecha de Expiración
                                         </label>
-                                        <input type="text" id="creditCardExpiry" required placeholder="MM/AA" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" />
+                                        <IMaskInput 
+                                            id="creditCardExpiry"
+                                            mask="00/00" 
+                                            disabled={loading}
+                                            required
+                                            autoComplete="cc-exp"
+                                            lazy={true}
+                                            placeholder="01/12"
+                                            className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800"
+                                        />
                                     </div>
                                     
                                     <div className="w-full flex flex-col gap-4">
                                         <label htmlFor="creditCardCVC">
                                             CVC
                                         </label>
-                                        <input type="text" id="creditCardCVC" required placeholder="123" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800" />
+                                        <IMaskInput 
+                                            id="creditCardCVC"
+                                            mask="000" 
+                                            autoComplete="cc-cvc"
+                                            disabled={loading}
+                                            required
+                                            lazy={true}
+                                            placeholder="123"
+                                            className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-stone-800"
+                                        />
                                     </div>
+                                    
+
                                 </div>
 
                                 <label htmlFor="creditCardHolder">
                                     Titular de la Tarjeta
                                 </label>
-                                <input type="text" id="creditCardHolder" required placeholder="Nombre completo" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                <input type="text" id="creditCardHolder" required placeholder="Nombre completo" className="border-2 border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-blue-500" autoComplete="cc-name"/>
 
                             </div>
 
@@ -264,6 +294,7 @@ export default function CheckoutPage() {
                         <button className="mt-6 bg-primary text-primary-foreground py-4 px-6 rounded-lg font-semibold hover:bg-primary/90 transition-colors uppercase cursor-pointer" 
                             type="submit" 
                             disabled={loading}
+                            aria-label="Finalizar compra"
                         >
                             {loading ? "Procesando..." : "Pagar"}
                         </button>
@@ -314,7 +345,7 @@ export default function CheckoutPage() {
                             </div>
                             <div className="flex justify-between text-gray-700 text-sm">
                                 <span>Envío</span>
-                                <span>${isFreeShipping ? '0.00' : `$${envio.toFixed(2)}`}</span>
+                                <span>${isFreeShipping ? '0.00' : `${envio.toFixed(2)}`}</span>
                             </div>
                             
                         </section>
