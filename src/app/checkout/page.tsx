@@ -13,14 +13,17 @@ import { CreateCheckoutSchema } from "@/schemas/checkout.schema";
 import { CreateOrder } from "@/domain/order";
 import { IMaskInput } from 'react-imask';
 
+const COST_FREE_SHIPPING_THRESHOLD = 100000
+const COST_STANDARD_SHIPPING = 9999
+const COST_EXPRESS_SHIPPING = 19999
+
 export default function CheckoutPage() {
     const {totalPrice, items, clearCart} = useCart()
     const router = useRouter()
 
+    const isFreeShipping = totalPrice > COST_FREE_SHIPPING_THRESHOLD
 
-    const isFreeShipping = totalPrice > 100
-
-    const [envio, setEnvio] = useState(isFreeShipping ? 0 : 9.99)
+    const [envio, setEnvio] = useState(isFreeShipping ? 0 : COST_STANDARD_SHIPPING)
     const [loading, setLoading] = useState(false)
 
     const {
@@ -41,7 +44,7 @@ export default function CheckoutPage() {
             subtotal: totalPrice,
             shipping: {
                 method: data.shipping.method,
-                price: data.shipping.method === "standard" ? (isFreeShipping ? 0 : 9.99) : 19.99
+                price: data.shipping.method === "standard" ? (isFreeShipping ? 0 : COST_STANDARD_SHIPPING) : COST_EXPRESS_SHIPPING
             },
             total: totalPrice + envio,
             customer: {
@@ -88,8 +91,10 @@ export default function CheckoutPage() {
     }
 
     useEffect(()=>{
-        setEnvio(totalPrice > 100 ? 0 : 9.99)
+        setEnvio(totalPrice > COST_FREE_SHIPPING_THRESHOLD ? 0 : COST_STANDARD_SHIPPING)
     },[totalPrice])
+
+    const remainingForFreeShipping = COST_FREE_SHIPPING_THRESHOLD - totalPrice
 
     if (items.length === 0) {
         return (
@@ -195,25 +200,25 @@ export default function CheckoutPage() {
                                 <label className="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-stone-800 transition-colors accent-stone-800 has-checked:border-stone-800 has-checked:bg-stone-100">
                                     <input type="radio" {...register("shipping.method")} value="standard" defaultChecked className="w-4 h-4 cursor-pointer "  
                                     onChange={() => setEnvio(
-                                        totalPrice > 100 ? 0 : 9.99
+                                        totalPrice > COST_FREE_SHIPPING_THRESHOLD ? 0 : COST_STANDARD_SHIPPING
                                     )}
                                     />
                                     <div className="ml-3 flex-1">
                                         <p className="font-semibold text-gray-700">Envío Normal</p>
-                                        <p className="text-sm text-gray-500">Entrega en 5-7 días</p>
+                                        <p className="text-sm text-gray-500">Entrega en 5-7 días / Gratis desde $100.000</p>
                                     </div>
-                                    <p className="font-semibold text-gray-700">{totalPrice > 100 ? "Gratis" : "$9.99"}</p>
+                                    <p className="font-semibold text-gray-700">{totalPrice > COST_FREE_SHIPPING_THRESHOLD ? "Gratis" : `$${(COST_STANDARD_SHIPPING).toFixed(2)}`}</p>
                                 </label>
                                 
                                 <label className="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-stone-800 transition-colors accent-stone-800 has-checked:border-stone-800 has-checked:bg-stone-100">
                                     <input type="radio" {...register("shipping.method")} value="express" className="w-4 h-4 cursor-pointer" 
-                                    onChange={() => setEnvio(19.99)}
+                                        onChange={() => setEnvio(COST_EXPRESS_SHIPPING)}
                                     />
                                     <div className="ml-3 flex-1">
                                         <p className="font-semibold text-gray-700">Envío Express</p>
                                         <p className="text-sm text-gray-500">Entrega en 1-2 días</p>
                                     </div>
-                                    <p className="font-semibold text-gray-700">$19.99</p>
+                                    <p className="font-semibold text-gray-700">${(COST_EXPRESS_SHIPPING ).toFixed(2)}</p>
                                 </label>
                             </div>
                         </section>
@@ -345,8 +350,13 @@ export default function CheckoutPage() {
                             </div>
                             <div className="flex justify-between text-gray-700 text-sm">
                                 <span>Envío</span>
-                                <span>${isFreeShipping ? '0.00' : `${envio.toFixed(2)}`}</span>
+                                <span>${envio.toFixed(2)}</span>
                             </div>
+                            {!isFreeShipping && (
+                                <p className="text-sm text-gray-500">
+                                    Te faltan ${remainingForFreeShipping} para envío gratis
+                                </p>
+                            )}
                             
                         </section>
 
@@ -359,7 +369,7 @@ export default function CheckoutPage() {
 
                         <div className="flex gap-4 my-3 items-center ">
                             <Truck className="text-gray-500"  size={18}/>
-                            <span className="text-sm text-gray-500">Envío gratis en pedidos superiores a $100</span>
+                            <span className="text-sm text-gray-500">Envío estandar gratis en pedidos superiores a $100.000</span>
                         </div>
                         <div className="flex gap-4 my-3 items-center ">
                             <ShieldCheck className="text-gray-500"  size={18}/>

@@ -27,8 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} ${cormorant.variable} font-sans antialiased`}>
+    <html lang="es" data-scroll="smooth">
+      <body className={`${inter.variable} ${cormorant.variable} font-sans antialiased min-h-screen flex flex-col h-full`}>
         <CartProvider>
           <Header />
           {children}

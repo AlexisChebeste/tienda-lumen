@@ -5,29 +5,44 @@ import { uniqueColorsFromVariants } from "@/services/product.service";
 import { useMemo, useState } from "react";
 
 export default function ProductInfo({product, setSelectImage}: {product: CatalogProduct, setSelectImage: (index: number) => void}) {
+    
+    const imageByColor = useMemo(() => {
+        const map = new Map<string, string>()
 
-    const [variantProduct, setVariantProduct] = useState<ProductVariant[]>((product.variants || []).map(v => ({
-        ...v,
-        productId: product.id,
-        image: product.images[0]?.url || ''
-    })));
+        product.images.forEach(img => {
+            if (img.color_id && !map.has(img.color_id)) {
+            map.set(img.color_id, img.url)
+            }
+        })
+
+        return map
+    }, [product.images])
+
+    const variantProduct = useMemo(() => 
+        (product.variants || []).map(v => ({
+            ...v,
+            productId: product.id,
+            image: imageByColor.get(v.color.id) || product.images[0]?.url || ''
+        })),
+    [product]);
+
     const colors = uniqueColorsFromVariants(variantProduct)
     const [outStock, setOutStock] = useState<boolean>(false)
     const [count, setCount] = useState(1);
     const [sizeSelected, setSizeSelected] = useState<string | null>(null);
-    const [colorSelected, setColorSelected] = useState<Color>(colors[0] || { name: '', hex: '' });
+    const [colorSelected, setColorSelected] = useState<string | null>(colors[0]?.id || null);
     const {addItem, items} = useCart()
 
+    const selectedColor = colors.find(c => c.id === colorSelected)
+
     const sizesForColor = useMemo(() => variantProduct
-        .filter(v => v.color.id === colorSelected.id)
+        .filter(v => v.color.id === colorSelected)
     , [variantProduct, colorSelected]);
 
     const isColorOutOfStock = sizesForColor.every(v => v.stock === 0);
 
     const selectedVariant = variantProduct.find(
-        v =>
-        v.color.id === colorSelected.id &&
-        v.size.name === sizeSelected
+        v => v.color.id === colorSelected && v.size.id === sizeSelected
     );
 
     const handleAddItemToCart = () =>{
@@ -56,17 +71,18 @@ export default function ProductInfo({product, setSelectImage}: {product: Catalog
         setOutStock(false)
     }
 
-    const handleColor  = (color : Color) => {
-        if (colorSelected !== color){
+    const handleColor  = (colorId : string) => {
+        if (colorSelected !== colorId){
             setSizeSelected(null)
-            setColorSelected(color)
+            setColorSelected(colorId)
             setCount(1)
-            handleColorChange(color)
+            handleColorChange(colorId)
         }
     }
 
-    const handleColorChange = (color: Color) => {
-        const index = product.images.findIndex(img => img.colorId === color.id);
+    const handleColorChange = (colorId: string) => {
+        const index = product.images.findIndex(img => img.color_id  === colorId);
+
         if (index !== -1) {
             setSelectImage(index);
         }
@@ -75,8 +91,8 @@ export default function ProductInfo({product, setSelectImage}: {product: Catalog
     const cartItem = items.find(
     (i) =>
         i.id === selectedVariant?.id &&
-        i.size === selectedVariant?.size.name &&
-        i.colorId === selectedVariant?.color.name
+        i.size === selectedVariant?.size.id &&
+        i.colorId === selectedVariant?.color.id
     );
 
     const quantityInCart = cartItem?.quantity ?? 0;
@@ -87,14 +103,14 @@ export default function ProductInfo({product, setSelectImage}: {product: Catalog
         <div className="flex flex-col gap-4 mt-auto">
 
             <div className="flex flex-col ">
-                <h3>Color: {colorSelected.name}</h3>
+                <h3>Color: {selectedColor?.name}</h3>
                 <div className="mt-2 flex gap-2">
                     {colors.map((color) => (
                         <button 
                             key={color.id} 
-                            onClick={() => handleColor(color)} 
+                            onClick={() => handleColor(color.id)} 
                             className={`border-2 w-10 h-10 rounded-full  cursor-pointer transition-colors duration-200 hover:scale-110
-                                ${colorSelected.name === color.name ? 'border-black' : 'border-gray-300 hover:border-gray-500 hover:scale-105'}
+                                ${selectedColor?.name === color.name ? 'border-black' : 'border-gray-300 hover:border-gray-500 hover:scale-105'}
                             `} 
                             style={{ backgroundColor: color.hex }}
                             aria-label={color.name}
@@ -114,7 +130,7 @@ export default function ProductInfo({product, setSelectImage}: {product: Catalog
                         <div key={variant.size.id} className="relative">
                             <button
                             disabled={isDisabled}
-                            onClick={() => setSizeSelected(variant.size.name)}
+                            onClick={() => setSizeSelected(variant.size.id)}
                             title={isDisabled ? 'Sin stock disponible' : undefined}
                             className={`
                                 relative z-10 
@@ -150,7 +166,7 @@ export default function ProductInfo({product, setSelectImage}: {product: Catalog
                         <div className="flex">
                             <button onClick={() => setCount(Math.max(1, count - 1))} className="px-4 py-3 border flex items-center justify-center hover:bg-gray-200 transition-colors duration-200 cursor-pointer">-</button>
                             <div className="w-12 py-3 border-t border-b flex items-center justify-center">{count}</div>
-                            <button onClick={() => setCount(count + 1)} className="px-4 py-3 border flex items-center justify-center hover:bg-gray-200 transition-colors duration-200 cursor-pointer">+</button>
+                            <button onClick={() => setCount(c => Math.min(c + 1, availableStock))}className="px-4 py-3 border flex items-center justify-center hover:bg-gray-200 transition-colors duration-200 cursor-pointer">+</button>
                         </div>
                         <button onClick={handleAddItemToCart} className="w-full rounded-md bg-stone-800 px-4 py-3 text-white hover:bg-stone-900 transition-colors duration-200 cursor-pointer disabled:bg-gray-300 disabled:text-stone-500 disabled:cursor-not-allowed font-medium" disabled={!sizeSelected || count > availableStock} title={!sizeSelected ? "Por favor selecciona un talle" : count > availableStock ? `Solo ${availableStock} unidades disponibles` : undefined}>
                             {!sizeSelected ? "Selecciona un talle" : "Añadir al carrito"}

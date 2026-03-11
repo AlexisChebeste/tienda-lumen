@@ -16,7 +16,9 @@ export default function ProductGallery({images, selectImage, setSelectImage}: Pr
                     src={images[selectImage].url} 
                     alt="Product Image"  
                     fill 
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-cover"
+                    loading="eager"
                 />
             </div>
             <div className="order-2 md:order-1 grid grid-cols-3 md:grid-cols-1 gap-3">

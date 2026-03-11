@@ -1,14 +1,13 @@
-import Footer from "@/components/footer";
-import Header from "@/components/header";
 import ProductPopular from "@/components/product-popular";
 import { CatalogProduct } from "@/domain/catalog.types";
-import { getProductsPopular } from "@/services/catalog.service";
+import { getProductsPopular, ProductPopularType } from "@/services/catalog.service";
 import Link from "next/link";
 
 export default async function Home() {
 
-  const products : CatalogProduct[] =  await getProductsPopular() || [];
+  const products : ProductPopularType[] =  await getProductsPopular() || [] as ProductPopularType[];
 
+ 
   return (
     <div className="flex min-h-screen flex-col">
 
@@ -35,11 +34,18 @@ export default async function Home() {
         <section>
           <div className="mx-auto px-6 py-24 max-w-7xl">
             <h2 className="font-serif text-4xl font-light tracking-tight md:text-5xl text-center">Colección Destacada</h2>
-            <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2  lg:grid-cols-4">
+            <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2  lg:grid-cols-3 ">
               {/* Example Product Cards */}
-              {products.map((product) => (
-               <ProductPopular key={product.id} product={product} />
-              ))}
+              {products.length > 0 ? (
+                products.map((product) => (
+                  <ProductPopular key={product.id} product={product} />
+                ))
+              ) : (
+                <p className="text-lg text-muted-foreground text-center col-span-full">
+                  No se encontraron productos populares.
+                </p>
+              )}
+
             </div>
           </div>
         </section>

@@ -101,7 +101,7 @@ export default function CartSidebar ({isOpen, onClose} : CartSidebarProps) {
                                 <p className="text-lg font-semibold">$ {totalPrice.toFixed(2)} </p>
                             </div>
 
-                            <p className="text-sm text-stone-700">Envío gratis en compras mayores a $100</p>
+                            <p className="text-sm text-stone-700">Envío gratis en compras mayores a $100.000</p>
 
                             <Link className="flex items-center justify-center w-full p-4 bg-stone-950 text-white hover:bg-stone-800 transition-colors duration-200 cursor-pointer font-semibold uppercase" href="/checkout" onClick={() => {
                                 onClose()

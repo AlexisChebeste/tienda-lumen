@@ -1,7 +1,5 @@
 'use client'
 
-import Footer from "@/components/footer";
-import Header from "@/components/header";
 import ProductGallery from "@/components/product-gallery";
 import ProductInfo from "@/components/product-info";
 import { CatalogProduct } from "@/domain/catalog.types";
@@ -40,23 +38,21 @@ export default function ProductPage() {
     if (!loading && !product) {
         return (
             <div className="flex min-h-screen flex-col">
-                <Header />
                 <main className="flex-1 flex items-center justify-center">
                     <section className="flex flex-col items-center justify-center gap-7">
                         <h1 className="text-2xl">No hay producto disponible</h1>
-                        <Link href="/shop" className="ml-4 text-blue-500 underline">
+                        <Link href="/tienda" className="ml-4 text-blue-500 underline">
                             <ArrowLeft className="inline-block mr-2" size={20} />
                             Volver a la tienda
                         </Link>
                     </section>
                 </main>
-                <Footer />
             </div>
         );
     }
 
     return (
-        <div className="flex min-h-screen flex-col">
+        <div className="flex-1 flex flex-col">
 
             <main className="flex-1 flex flex-col max-w-7xl mx-auto w-full px-6 h-full">
                 {loading ? (

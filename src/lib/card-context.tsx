@@ -1,7 +1,6 @@
 "use client"
 
-import { colors } from "@/domain/colors";
-import { productImages } from "@/mock/product-images.mock";
+import { getProductImagesAll } from "@/services/product.service";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
 
 export interface CartItem {
@@ -35,6 +34,21 @@ const CartContext = createContext<CartContextType | undefined>(undefined)
 
 export function CartProvider({children}: {children: ReactNode}) {
     const [items, setItems] = useState<CartItem[]>([])
+
+    const [productImages, setProductImages] = useState<{ productId: string; colorId: string; url: string }[]>([])
+
+    useEffect(() => {
+      const fetchImages = async () => {
+        try {
+          const images = await getProductImagesAll()
+          setProductImages(images)
+        }
+        catch (error) {
+          console.error("Error fetching product images:", error)
+        }
+      }
+      fetchImages()
+    }, [])
 
     // cargar carrito
     useEffect(() => {
@@ -85,13 +99,11 @@ export function CartProvider({children}: {children: ReactNode}) {
         const newItem: CartItem = {
           ...item,
           quantity: totalAdd,
-          image: productImages.find(
-            img => img.productId === item.productId && img.colorId === item.colorId
-          )?.url || ''
         }
 
         return [...currentItems, newItem]
       })
+
       
       return result
     }

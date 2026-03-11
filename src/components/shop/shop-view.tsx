@@ -29,9 +29,9 @@ export default async function ShopView({
     }
   
     return (
-      <div className="flex min-h-screen flex-col ">
+      <div className="flex flex-1 flex-col ">
 
-      <main className="flex-1 grid grid-cols-1 lg:grid-cols-5 max-w-7xl mx-auto w-full p-4 gap-6 items-start h-full">
+      <main className="grid grid-cols-1 lg:grid-cols-5 max-w-7xl mx-auto w-full p-4 gap-6 items-start h-full">
 
         <Suspense fallback={<div className="p-4">Cargando filtros...</div>}>
             <FilterSection maxPrice={maxPrice} />

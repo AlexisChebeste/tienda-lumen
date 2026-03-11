@@ -10,7 +10,6 @@ export default function OrderSuccessPage() {
 
     const { orderId } = params;
 
-
     return (
       <div className="flex min-h-screen bg-background flex-col">
         <main className="flex-1 flex flex-col max-w-7xl mx-auto w-full p-6 gap-6 items-start justify-center h-full relative ">

@@ -1,8 +1,7 @@
 
 import ShopView from "@/components/shop/shop-view"
-import { ProductData } from "@/domain/filters.types"
 import { supabase } from "@/lib/supabase/client"
-import { getProductsSearch, parseFilters, parsePriceRange } from "@/services/catalog.service"
+import { parseFilters, parsePriceRange } from "@/services/catalog.service"
 import { getMaxPrice } from "@/services/filter.service"
 
 type Props = {

@@ -5,5 +5,5 @@ export interface ProductImage {
   alt: string;
   position: number;
   isMain: boolean;
-  colorId: string;
+  color_id: string;
 }
