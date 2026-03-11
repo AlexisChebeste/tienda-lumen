@@ -1,12 +1,13 @@
 'use client';
 
-import { categories } from "@/domain/categories";
-import { colors } from "@/domain/colors";
-import { sizes } from "@/domain/sizes";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation"
+import { Category } from "@/domain/categories";
+import { Color } from "@/domain/colors";
+import { Size } from "@/domain/sizes";
+import { getCategories, getColors, getSizes } from "@/services/filter.service";
 
-export default function FilterSection() {
+export default function FilterSection({ maxPrice }: { maxPrice: number }) {
 
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -55,6 +56,29 @@ export default function FilterSection() {
 
     updateUrl(param, value)
     }
+
+    const [categories, setCategories] = useState<Category[]>([])
+    const [colors, setColors] = useState<Color[]>([])
+    const [sizes, setSizes] = useState<Size[]>([])
+    
+    useEffect(() => {
+        async function fetchFilters() {
+            try {
+                const [fetchedCategories, fetchedColors, fetchedSizes] = await Promise.all([
+                    getCategories(),
+                    getColors(),
+                    getSizes()
+                ])
+                setCategories(fetchedCategories)
+                setColors(fetchedColors)
+                setSizes(fetchedSizes)
+            } catch (error) {
+                console.error("Error fetching filters:", error)
+            }
+        }
+
+        fetchFilters()
+    }, [])
     
     const selectedCategories = searchParams.get("category")?.split(",") || []
 
@@ -62,7 +86,7 @@ export default function FilterSection() {
 
     const selectedColors = searchParams.get("color")?.split(",") || []
 
-    const selectedPriceRange = searchParams.get("priceRange")?.split("-").map(Number) || [0, 500]
+    const selectedPriceRange = searchParams.get("priceRange")?.split("-").map(Number) || [0, maxPrice]
 
 const [price, setPrice] = useState(selectedPriceRange[1])
 
@@ -83,7 +107,7 @@ useEffect(() => {
             <div className="flex flex-col gap-2 text-sm text-slate-800">
                 {selectedCategories && selectedCategories.length > 0 && (
                         <div>
-                            <span className="font-medium">Categorías:</span> {selectedCategories.map(id => categories.find(c => c.id === id)?.name).join(', ')}
+                            <span className="font-medium">Categorías:</span> {selectedCategories.map(slug => categories.find(c => c.slug === slug)?.name).join(', ')}
                         </div>
                 )}
                 {selectedSizes && selectedSizes.length > 0 && (
@@ -112,10 +136,10 @@ useEffect(() => {
                         <input
                             type="checkbox"
                             name="category"
-                            value={category.id}
+                            value={category.slug}
                             className="size-4 rounded-lg accent-black cursor-pointer checked:rounded-md"
                             onChange={(e) => handleCheckboxChange(e, 'category')}
-                            checked={selectedCategories.includes(category.id)}
+                            checked={selectedCategories.includes(category.slug)}
                         />
                         {category.name}
                     </label>
@@ -181,7 +205,7 @@ useEffect(() => {
             <input 
                 type="range" 
                 min="0" 
-                max="500" 
+                max={maxPrice}
                 value={price}
                 onChange={handlePriceChange}
                 className="w-full accent-black cursor-pointer" 

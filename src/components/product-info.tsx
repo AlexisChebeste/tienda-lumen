@@ -91,7 +91,7 @@ export default function ProductInfo({product, setSelectImage}: {product: Catalog
                 <div className="mt-2 flex gap-2">
                     {colors.map((color) => (
                         <button 
-                            key={color.name} 
+                            key={color.id} 
                             onClick={() => handleColor(color)} 
                             className={`border-2 w-10 h-10 rounded-full  cursor-pointer transition-colors duration-200 hover:scale-110
                                 ${colorSelected.name === color.name ? 'border-black' : 'border-gray-300 hover:border-gray-500 hover:scale-105'}

@@ -152,6 +152,17 @@ export async function getProductsSearch(
   }
 }
 
+export function parsePriceRange(range?: string) {
+  if (!range) return { min: null, max: null }
+
+  const [min, max] = range.split("-").map(Number)
+
+  return {
+    min: min ?? null,
+    max: max ?? null
+  }
+}
+
 export function parseFilters(searchParams: any) {
 
   const category = searchParams.category
@@ -176,6 +187,7 @@ export function parseFilters(searchParams: any) {
     priceRange
   }
 }
+
 
 export async function getProductBySlug(slug: string): Promise<CatalogProduct | undefined> {
   const products = await getCatalogProducts();

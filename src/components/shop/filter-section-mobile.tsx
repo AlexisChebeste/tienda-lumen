@@ -1,15 +1,15 @@
 'use client';
-
-import { categories } from "@/domain/categories";
-import { colors } from "@/domain/colors";
-import { sizes } from "@/domain/sizes";
+import { getCategories, getColors, getSizes } from "@/services/filter.service";
 import { Filter, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react";
 import { SortSelect } from "./sort-select";
+import { Category } from "@/domain/categories";
+import { Color } from "@/domain/colors";
+import { Size } from "@/domain/sizes";
 
 
-export default function FilterSectionMobile() {
+export default function FilterSectionMobile({maxPrice}: { maxPrice: number }) {
     const [openMenu, setOpenMenu] = useState(false);
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -42,28 +42,52 @@ export default function FilterSectionMobile() {
             params.set("page", "1") // Resetear a página 1 al cambiar filtros
     
             router.push(`/tienda?${params.toString()}`)
+    }
+
+    const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPrice(Number(e.target.value))
+    }
+    
+    const handleCheckboxChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    param: string
+    ) => {
+
+    const value = e.target.value
+
+    updateUrl(param, value)
+    }
+
+    const [categories, setCategories] = useState<Category[]>([])
+    const [colors, setColors] = useState<Color[]>([])
+    const [sizes, setSizes] = useState<Size[]>([])
+    
+    useEffect(() => {
+        async function fetchFilters() {
+            try {
+                const [fetchedCategories, fetchedColors, fetchedSizes] = await Promise.all([
+                    getCategories(),
+                    getColors(),
+                    getSizes()
+                ])
+                setCategories(fetchedCategories)
+                setColors(fetchedColors)
+                setSizes(fetchedSizes)
+            } catch (error) {
+                console.error("Error fetching filters:", error)
+            }
         }
-        const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-            setPrice(Number(e.target.value))
-        }
-    
-        const handleCheckboxChange = (
-        e: React.ChangeEvent<HTMLInputElement>,
-        param: string
-        ) => {
-    
-        const value = e.target.value
-    
-        updateUrl(param, value)
-        }
-        
-        const selectedCategories = searchParams.get("category")?.split(",") || []
-    
-        const selectedSizes = searchParams.get("size")?.split(",") || []
-    
-        const selectedColors = searchParams.get("color")?.split(",") || []
-    
-        const selectedPriceRange = searchParams.get("priceRange")?.split("-").map(Number) || [0, 500]
+
+        fetchFilters()
+    }, [])
+
+    const selectedCategories = searchParams.get("category")?.split(",") || []
+
+    const selectedSizes = searchParams.get("size")?.split(",") || []
+
+    const selectedColors = searchParams.get("color")?.split(",") || []
+
+    const selectedPriceRange = searchParams.get("priceRange")?.split("-").map(Number) || [0, maxPrice]
     
     const [price, setPrice] = useState(selectedPriceRange[1])
     
@@ -73,7 +97,7 @@ export default function FilterSectionMobile() {
         }, 400) // 400ms debounce
     
         return () => clearTimeout(timeout)
-        }, [price])
+    }, [price])
 
     return (
         <div className="h-max flex items-center w-full p-2 lg:hidden col-span-4 ">
@@ -107,7 +131,7 @@ export default function FilterSectionMobile() {
                     <div className="flex flex-col gap-2 text-sm text-slate-800">
                         {selectedCategories && selectedCategories.length > 0 && (
                                 <div>
-                                    <span className="font-medium">Categorías:</span> {selectedCategories.map(id => categories.find(c => c.id === id)?.name).join(', ')}
+                                    <span className="font-medium">Categorías:</span> {selectedCategories.map(slug => categories.find(c => c.slug === slug)?.name).join(', ')}
                                 </div>
                         )}
                         {selectedSizes && selectedSizes.length > 0 && (
@@ -136,10 +160,10 @@ export default function FilterSectionMobile() {
                                 <input
                                     type="checkbox"
                                     name="category"
-                                    value={category.id}
+                                    value={category.slug}
                                     className="size-4 rounded-lg accent-black cursor-pointer checked:rounded-md"
                                     onChange={(e) => handleCheckboxChange(e, 'category')}
-                                    checked={selectedCategories.includes(category.id)}
+                                    checked={selectedCategories.includes(category.slug)}
                                 />
                                 {category.name}
                             </label>
@@ -205,7 +229,7 @@ export default function FilterSectionMobile() {
                     <input 
                         type="range" 
                         min="0" 
-                        max="500" 
+                        max={maxPrice}
                         value={price}
                         onChange={handlePriceChange}
                         className="w-full accent-black cursor-pointer" 

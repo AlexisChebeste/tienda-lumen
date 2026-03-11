@@ -1,38 +1,43 @@
 import { CatalogProduct } from "@/domain/catalog.types";
-import Footer from "../footer";
 import ProductCard from "../product-card";
-import { Loader2 } from "lucide-react";
 import FilterSection from "./filter-section";
 import FilterSectionMobile from "./filter-section-mobile";
-import Header from "../header";
 import { SortSelect } from "./sort-select";
 import { Suspense } from "react";
 import Pagination from "./pagination";
+import { getMaxPrice } from "@/services/filter.service";
 
 type Props = {
   products: CatalogProduct[]
   total: number
   page: number
   limit: number
+  maxPrice: number
 }
 
-export default function ShopView({
+export default async function ShopView({
   products,
   total,
   page,
-  limit
+  limit,
+  maxPrice
 }: Props) {
     const totalPages = Math.ceil(total / limit);
+
+    if (!products) {
+      return <div className="p-4">Cargando productos...</div>;
+    }
+  
     return (
       <div className="flex min-h-screen flex-col ">
 
       <main className="flex-1 grid grid-cols-1 lg:grid-cols-5 max-w-7xl mx-auto w-full p-4 gap-6 items-start h-full">
 
         <Suspense fallback={<div className="p-4">Cargando filtros...</div>}>
-            <FilterSection />
+            <FilterSection maxPrice={maxPrice} />
         </Suspense>
         <Suspense fallback={null}>
-            <FilterSectionMobile />
+            <FilterSectionMobile maxPrice={maxPrice} />
         </Suspense>
        
         {/* Aquí iría el listado de productos */}
