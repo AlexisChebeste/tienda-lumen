@@ -1,22 +1,40 @@
 "use client"
 
 import { useCart } from "@/lib/card-context";
-import { Search, ShoppingBag, User } from "lucide-react";
+import { Menu, Search, ShoppingBag, User } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import CartSidebar from "./cart-sidebar";
+import useClickOutside from "@/lib/useClickOutside";
+import SearchInput from "./search/search-input";
+
 
 export default function Header() {
     const [isCartOpen, setIsCartOpen] = useState(false)
     const {totalItems} = useCart()
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+    const [isSearchOpen, setIsSearchOpen] = useState(false)
+    const searchRef = useRef(null)
+    const mobileMenuRef = useRef(null)
+    const toggleSearchMenu = () => {
+        setIsMobileMenuOpen(false);
+        setIsSearchOpen(!isSearchOpen);
+    }
 
-
+    useClickOutside(searchRef, () => setIsSearchOpen(false))
+    useClickOutside(mobileMenuRef, () => setIsMobileMenuOpen(false))
 
     return (
         <>
             <header className="sticky top-0 z-30 w-full border-b border-border bg-background/90 backdrop-blur-sm">
                 <div className="container flex h-20 items-center justify-between px-6 mx-auto max-w-7xl">
-                    <Link href="/" className="flex items-center">
+
+                    <button className="md:hidden flex items-center p-2 text-sm font-medium hover:underline hover:bg-black/15 transition rounded-full" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                        <Menu className="h-5 w-5" />
+                        <span className="sr-only">Menú</span>
+                    </button>
+
+                    <Link href="/" className="flex items-center" onClick={() => setIsMobileMenuOpen(false)}>
                         <span className="font-serif text-2xl text-neutral-600  font-light tracking-[0.3em]">LUMEN</span>
                     </Link>
 
@@ -35,11 +53,14 @@ export default function Header() {
 
                     {/* Actions */}
                     <div className="flex items-center gap-4">
-                        <button className="flex items-center p-2 text-sm font-medium hover:underline hover:bg-black/15 transition rounded-full">
+
+                        <button className="hidden md:flex items-center p-3 gap-2 text-sm font-medium hover:underline hover:bg-black/15 transition w-full text-center justify-center"
+                            onClick={toggleSearchMenu}
+                        >
                             <Search className="h-5 w-5" />
-                            <span className="sr-only">Buscar</span>
                         </button>
-                        <button className="flex items-center p-2 text-sm font-medium hover:underline hover:bg-black/15 transition rounded-full">
+
+                        <button className="hidden md:flex items-center p-2 text-sm font-medium hover:underline hover:bg-black/15 transition rounded-full">
                             <User className="h-5 w-5" />
                             <span className="sr-only">Cuenta</span>
                         </button>
@@ -54,7 +75,58 @@ export default function Header() {
                         </button>
                     </div>
                 </div>
+
+
             </header>
+
+            <div
+                className={`md:hidden absolute top-20 left-0 z-10 bg-white w-full font-medium text-neutral-600 border-b border-border shadow-sm
+                ${isMobileMenuOpen ? 'translate-y-0' : '-translate-y-full'}
+                transition-transform duration-300`}
+                ref={mobileMenuRef}
+            >
+                <div className="flex flex-col items-center justify-center ">
+
+
+                    <Link href="/tienda" className=" text-sm font-medium text-neutral-600 hover:underline hover:bg-black/15 transition w-full text-center p-3 " onClick={() => setIsMobileMenuOpen(false)}>
+                        Tienda
+                    </Link>
+                    <Link href="/nosotros" className=" text-sm font-medium text-neutral-600 hover:underline hover:bg-black/15 transition w-full text-center p-3" onClick={() => setIsMobileMenuOpen(false)}>
+                        Nosotros
+                    </Link>
+                    <Link href="/contacto" className=" text-sm font-medium text-neutral-600 hover:underline hover:bg-black/15 transition w-full text-center p-3" onClick={() => setIsMobileMenuOpen(false)}>
+                        Contacto
+                    </Link>
+
+                </div>
+
+                <div className="flex flex-col items-center justify-center border-t border-border">
+                    <button className="flex items-center p-3 gap-2 text-sm font-medium hover:underline hover:bg-black/15 transition w-full text-center justify-center"
+                        onClick={toggleSearchMenu}
+                    >
+                        <Search className="h-5 w-5" />
+                        <span >Buscar</span>
+                    </button>
+                    <button className="flex items-center p-3 gap-2 text-sm font-medium hover:underline hover:bg-black/15 transition w-full text-center justify-center">
+                        <User className="h-5 w-5" />
+                        <span >Cuenta</span>
+                    </button>
+
+                </div>
+            </div>
+
+            <div className={`
+                absolute top-20 left-0 md:mx-auto w-full  z-20
+                transition-all duration-300
+                ${isSearchOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none"}
+                `}
+                ref={searchRef}
+            >
+                <div className="mx-auto w-full max-w-xl">
+                    <SearchInput setIsSearchOpen={setIsSearchOpen} isSearchOpen={isSearchOpen} />
+                </div>
+            </div>
+
             <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
         </>
     );

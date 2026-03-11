@@ -1,5 +1,6 @@
 
 import { CatalogProduct } from "@/domain/catalog.types";
+import { Product } from "@/domain/products";
 import { supabase } from "@/lib/supabase/client";
 
 export interface QueryPaginationDto {
@@ -84,3 +85,30 @@ export async function getProductsPopular(): Promise<ProductPopularType[] | undef
 
   return data;
 }
+
+export type ProductBySearchQueryType = {
+  id: string;
+  name: string;
+  slug: string;
+  price: number;
+  categories: {
+    name: string;
+  }[];
+  product_images: {
+    url: string;
+    is_main: boolean;
+  }[];
+  variants: {
+    color_id: string;
+  }[];
+}
+
+
+export async function searchProducts(query: string) {
+  const { data } = await supabase.rpc("search_catalog_products", {
+    search: query
+  })
+
+  return data
+}
+  

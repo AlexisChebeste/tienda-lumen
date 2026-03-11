@@ -26,7 +26,7 @@ export default async function Home() {
             </h1>
             <p className="mt-6 text-lg text-muted-foreground md:text-xl">Piezas atemporales para la vida moderna</p>
             <button className="bg-black text-white mt-10 rounded-none px-10 py-4 text-sm tracking-widest uppercase hover:bg-black/90 transition-colors duration-300 ease-in-out">
-              <Link href="/shop">Comprar ahora</Link>
+              <Link href="/tienda">Comprar ahora</Link>
             </button>
           </div>
         </section>
@@ -57,7 +57,7 @@ export default async function Home() {
               LUMEN trae esenciales cuidadosamente diseñados que trascienden las tendencias. Cada pieza está elaborada con intención para el minimalista moderno que valora la calidad, la sostenibilidad y el estilo atemporal.
             </p>
             <button className="mt-10 px-12 py-4 border border-primary  text-black hover:bg-black hover:text-white transition-colors duration-300 ease-in-out tracking-widest uppercase bg-transparent text-sm">
-              <Link href="/about">Saber más</Link>
+              <Link href="/nosotros">Saber más</Link>
             </button>
           </div>
         </section>
