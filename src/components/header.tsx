@@ -80,7 +80,7 @@ export default function Header() {
             </header>
 
             <div
-                className={`md:hidden absolute top-20 left-0 z-30 bg-white w-full font-medium text-neutral-600 border-b border-border shadow-sm
+                className={`md:hidden absolute top-20 left-0 z-20 bg-white w-full font-medium text-neutral-600 border-b border-border shadow-sm
                 ${isMobileMenuOpen ? 'translate-y-0' : '-translate-y-full'}
                 transition-transform duration-300`}
                 ref={mobileMenuRef}
