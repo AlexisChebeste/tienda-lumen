@@ -12,6 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateCheckoutSchema } from "@/schemas/checkout.schema";
 import { CreateOrder } from "@/domain/order";
 import { IMaskInput } from 'react-imask';
+import { createOrder } from "@/services/orders.service";
 
 const COST_FREE_SHIPPING_THRESHOLD = 100000
 const COST_STANDARD_SHIPPING = 9999
@@ -69,16 +70,7 @@ export default function CheckoutPage() {
             }
         }
 
-        const res = await fetch("/api/orders", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                ...orderData
-            })
-        })
-        const result = await res.json()
+        const order = await createOrder(orderData)
 
         const existingOrders = JSON.parse(localStorage.getItem("orders") || "[]")
 
@@ -87,7 +79,7 @@ export default function CheckoutPage() {
         localStorage.setItem("orders", JSON.stringify(existingOrders))
         clearCart()
         
-        router.push(`/order-success/${result.orderId}`)
+        router.push(`/order-success/${order.id}`)
     }
 
     useEffect(()=>{
