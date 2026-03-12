@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase/client"
 import { parseFilters, parsePriceRange } from "@/services/catalog.service"
 import { getMaxPrice } from "@/services/filter.service"
 
-type Props = {
+export type Props = {
   searchParams: Promise<{
     category?: string
     color?: string
@@ -12,6 +12,7 @@ type Props = {
     priceRange?: string
     sort?: string
     page?: string
+    search_query?: string
   }>
 }
 
@@ -38,6 +39,8 @@ export default async function ShopPage({ searchParams }: Props) {
 
     min_price: price.min || 0,
     max_price: price.max || maxPrice,
+
+    search_query: params.search_query || null,
 
     sort_option: pagination.sort
   })

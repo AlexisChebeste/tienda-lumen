@@ -29,12 +29,7 @@ export default function RootLayout({
   return (
     <html lang="es" data-scroll="smooth">
       <body className={`${inter.variable} ${cormorant.variable} font-sans antialiased min-h-screen flex flex-col h-full`}>
-        <CartProvider>
-          <Header />
-          {children}
-
-          <Footer />
-        </CartProvider>
+        {children}
       </body>
     </html>
   );

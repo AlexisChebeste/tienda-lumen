@@ -1,17 +1,14 @@
+import AdminSidebar from "@/components/admin/admin-sidebar";
 
 
-export default function LayoutAdmin() {
+export default function LayoutAdmin({ children }: { children: React.ReactNode }) {
   return (
-    <div>
-      <h1>Admin Panel</h1>
-      <nav>
-        <ul>
-          <li><a href="/admin/orders">Orders</a></li>
-          <li><a href="/admin/products">Products</a></li>
-        </ul>
-      </nav>
-      <main>
-        {/* Child routes will be rendered here */}
+    <div className="flex min-h-screen w-full h-full">
+      
+      <AdminSidebar />
+
+      <main className="flex-1 bg-gray-50 p-8">
+        {children}
       </main>
     </div>
   );
