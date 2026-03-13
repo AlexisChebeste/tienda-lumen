@@ -1,6 +1,8 @@
 
 
+import CardsProducts from "@/components/admin/cards-products";
 import FilterProduct from "@/components/admin/filter-product";
+import TableProducts from "@/components/admin/table-products";
 import { ViewSelect } from "@/components/admin/view-select";
 import Pagination from "@/components/shop/pagination";
 import { SortSelect } from "@/components/shop/sort-select";
@@ -22,9 +24,6 @@ export type Props = {
     limit?: number
   }>
 }
-
-
-
 
 export default async function ProductsPage({ searchParams }: Props) {
 
@@ -64,10 +63,10 @@ export default async function ProductsPage({ searchParams }: Props) {
   const totalPages = Math.ceil(data.total / data.limit);
 
   return (
-    <div className="flex-1 flex flex-col gap-6 max-w-7xl mx-auto w-full  h-full">
+    <div className="flex-1 flex flex-col gap-6 mx-auto w-full  h-full pb-6">
       <section className="flex items-center justify-between">
         <div>
-          <h1 className="font-serif text-3xl font-light">Products</h1>
+          <h1 className="font-serif text-3xl font-light">Productos</h1>
           <p className="text-gray-500 mt-2">{data.data.length} productos en cátalogo</p>
         </div>
 
@@ -80,19 +79,11 @@ export default async function ProductsPage({ searchParams }: Props) {
       {/* Filtros nombre, slug y categoria */}
       <FilterProduct />
 
-      <section className="">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {data?.data?.map((product: CatalogProduct) => (
-            <div key={product.slug} className="border rounded-md p-4">
-              <h3 className="font-bold">{product.name}</h3>
-              <p className="text-gray-500">${product.basePrice.toFixed(2)}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      <CardsProducts products={data.data as CatalogProduct[]} />
 
+      <TableProducts products={data.data as CatalogProduct[]} />
 
-      <div className="flex items-center justify-between  gap-4 mt-6">
+      <div className="flex items-center justify-between  gap-4 pb-6">
         <div className="flex items-center gap-2 w-max">
           <span className="text-sm text-gray-500 min-w-max">Ordenar por:</span>
           <SortSelect />
@@ -104,7 +95,7 @@ export default async function ProductsPage({ searchParams }: Props) {
       </div>
         
       {totalPages > 1 &&(
-        <div className="flex w-full items-center justify-center">
+        <div className="flex w-full items-center justify-center pb-6">
           <Pagination page={data.page} totalPages={totalPages} />
         </div>
       )}

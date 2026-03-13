@@ -103,7 +103,6 @@ export type ProductBySearchQueryType = {
   }[];
 }
 
-
 export async function searchProducts(query: string) {
   const { data } = await supabase.rpc("search_catalog_products", {
     search: query

@@ -7,7 +7,7 @@ export default function LayoutAdmin({ children }: { children: React.ReactNode })
       
       <AdminSidebar />
 
-      <main className="flex-1 bg-gray-50 p-8">
+      <main className="flex-1 bg-gray-50 p-8 overflow-y-auto max-h-screen">
         {children}
       </main>
     </div>
