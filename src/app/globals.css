@@ -128,3 +128,65 @@ html{
   font-family: var(--default-font-family);
   line-height: 1.5;
 }
+
+.input-form {
+  width: 100%;
+  background-color: #fff;
+  color: #334155; /* text-slate-700 */
+  font-size: 0.875rem; /* text-sm */
+  border: 1px solid #e2e8f0; /* border-slate-200 */
+  border-radius: 0.25rem; /* rounded */
+  padding-left: 0.75rem; /* px-3 */
+  padding-right: 0.75rem; /* px-3 */
+  padding-top: 0.5rem; /* py-2 */
+  padding-bottom: 0.5rem; /* py-2 */
+  transition: box-shadow 0.3s, border-color 0.3s, background-color 0.3s;
+  outline: none;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); /* shadow-sm */
+}
+
+.input-form::placeholder {
+  color: #94a3b8; /* placeholder:text-slate-400 */
+}
+
+.input-form:focus {
+  border-color: #cbd5e1; /* focus:border-slate-400 */
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10); /* focus:shadow-md */
+}
+
+.input-form:hover {
+  border-color: #cbd5e1; /* hover:border-slate-400 */
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-primary-foreground);
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  transition: background-color 0.3s, color 0.3s;
+  cursor: pointer;
+
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-foreground);
+  color: var(--color-primary);
+  outline: 1px solid var(--color-primary);
+
+}
+
+.btn-secondary {
+  background-color: var(--color-secondary);
+  color: var(--color-secondary-foreground);
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+  transition: background-color 0.3s, color 0.3s;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-secondary-foreground);
+  color: var(--color-secondary);
+}

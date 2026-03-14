@@ -14,7 +14,7 @@ export default function AdminSidebar() {
     ];
 
     return (
-        <div className="w-64 bg-stone-900 flex flex-col text-white h-screen border-r border-gray-600">
+        <div className="hidden md:flex w-64 bg-stone-900  flex-col text-white h-screen border-r border-gray-600">
             <section className="flex items-center justify-between p-4 border-b border-gray-600">
                 <Link href="/admin" className="flex items-center ">
                     <h2 className="font-serif text-2xl text-white font-light tracking-wide">LUMEN</h2>

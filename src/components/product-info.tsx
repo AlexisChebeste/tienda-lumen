@@ -124,7 +124,7 @@ export default function ProductInfo({product, setSelectImage}: {product: Catalog
                 <div className="flex gap-2">
                     {sizesForColor.map((variant) => {
                         const isDisabled = variant.stock === 0;
-                        const isSelected = sizeSelected === variant.size.name;
+                        const isSelected = sizeSelected === variant.size.id;
 
                         return (
                         <div key={variant.size.id} className="relative">
@@ -168,12 +168,12 @@ export default function ProductInfo({product, setSelectImage}: {product: Catalog
                             <div className="w-12 py-3 border-t border-b flex items-center justify-center">{count}</div>
                             <button onClick={() => setCount(c => Math.min(c + 1, availableStock))}className="px-4 py-3 border flex items-center justify-center hover:bg-gray-200 transition-colors duration-200 cursor-pointer">+</button>
                         </div>
-                        <button onClick={handleAddItemToCart} className="w-full rounded-md bg-stone-800 px-4 py-3 text-white hover:bg-stone-900 transition-colors duration-200 cursor-pointer disabled:bg-gray-300 disabled:text-stone-500 disabled:cursor-not-allowed font-medium" disabled={!sizeSelected || count > availableStock} title={!sizeSelected ? "Por favor selecciona un talle" : count > availableStock ? `Solo ${availableStock} unidades disponibles` : undefined}>
-                            {!sizeSelected ? "Selecciona un talle" : "Añadir al carrito"}
+                        <button onClick={handleAddItemToCart} className="w-full rounded-md bg-stone-800 px-4 py-3 text-white hover:bg-stone-900 transition-colors duration-200 cursor-pointer disabled:bg-gray-300 disabled:text-stone-500 disabled:cursor-not-allowed font-medium" disabled={!sizeSelected || count >= availableStock || !selectedVariant} title={!sizeSelected ? "Por favor selecciona un talle" : count >= availableStock ? `Solo ${availableStock} unidades disponibles` : undefined}>
+                            {!sizeSelected ? "Selecciona un talle" : "Añadir al carrito" }
                         </button>
 
                     </div>
-                    {count > availableStock && selectedVariant && (
+                    {count >= availableStock && selectedVariant && (
                         <p className="text-red-600">
                             {availableStock === 0 ? "No hay stock disponible" : `Solo ${availableStock} unidades disponibles`}
                         </p>
