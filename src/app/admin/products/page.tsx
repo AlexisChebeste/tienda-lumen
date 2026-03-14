@@ -11,6 +11,7 @@ import { supabase } from "@/lib/supabase/client";
 import { parseFilters, parsePriceRange } from "@/services/catalog.service";
 import { getMaxPrice } from "@/services/filter.service";
 import { Plus } from "lucide-react";
+import Link from "next/link";
 
 export type Props = {
   searchParams: Promise<{
@@ -70,10 +71,10 @@ export default async function ProductsPage({ searchParams }: Props) {
           <p className="text-gray-500 mt-2">{data.data.length} productos en cátalogo</p>
         </div>
 
-        <button className="bg-black p-2 px-4 text-white cursor-pointer text-sm rounded-md flex items-center gap-2">
+        <Link href="/admin/products/create" className="bg-black p-2 px-4 text-white cursor-pointer text-sm rounded-md flex items-center gap-2 hover:bg-gray-800 transition-colors">
           <Plus className="inline-block" size={18} />
           Nuevo producto
-        </button>
+        </Link>
       </section>
 
       {/* Filtros nombre, slug y categoria */}
