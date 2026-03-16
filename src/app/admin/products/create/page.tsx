@@ -1,6 +1,6 @@
 "use client"
 
-import { CategoryNew } from "@/components/admin/product/category-new";
+import CategoryNew  from "@/components/admin/product/category-new";
 import { ProductImage } from "@/domain/product-image";
 import { ProductVariantCreate } from "@/domain/variants";
 import { ImagePlus, Plus, Trash2, X } from "lucide-react";
@@ -150,7 +150,7 @@ export default function CreateProductPage() {
                                     <div className="flex flex-col gap-2">
                                         <label htmlFor={`variant-color-${idx}`} className="font-medium text-sm">Color</label>
                                         <input type="text" id={`variant-color-${idx}`} placeholder="Color (ej: Rojo)" className="input-form" 
-                                            value={variant.colorId} defaultValue={""}
+                                            value={variant.colorId}
                                             onChange={e => {
                                                 const newColorId = e.target.value;
                                                 setVariants(prev => prev.map((v, i) => i === idx ? { ...v, colorId: newColorId } : v));
@@ -160,7 +160,7 @@ export default function CreateProductPage() {
                                     <div className="flex flex-col gap-2">
                                         <label htmlFor={`variant-size-${idx}`} className="font-medium text-sm">Talla</label>
                                         <input type="text" id={`variant-size-${idx}`} placeholder="Talla (ej: M)" className="input-form" 
-                                            value={variant.sizeId} defaultValue={""}
+                                            value={variant.sizeId}
                                             onChange={e => {
                                                 const newSizeId = e.target.value;
                                                 setVariants(prev => prev.map((v, i) => i === idx ? { ...v, sizeId: newSizeId } : v));
@@ -170,7 +170,7 @@ export default function CreateProductPage() {
                                     <div className="flex flex-col gap-2">
                                         <label htmlFor={`variant-price-${idx}`} className="font-medium text-sm">Precio</label>
                                         <input type="number" id={`variant-price-${idx}`}  className="input-form" 
-                                            value={variant.price}  defaultValue={0}
+                                            value={variant.price}
                                             onChange={e => {
                                                 const newPrice = parseFloat(e.target.value);
                                                 setVariants(prev => prev.map((v, i) => i === idx ? { ...v, price: isNaN(newPrice) ? 0 : newPrice } : v));
@@ -180,7 +180,7 @@ export default function CreateProductPage() {
                                     <div className="flex flex-col gap-2">
                                             <label htmlFor={`variant-stock-${idx}`} className="font-medium text-sm">Stock</label>
                                             <input type="number" id={`variant-stock-${idx}`}  className="input-form" 
-                                                value={variant.stock} defaultValue={0}
+                                                value={variant.stock}
                                                 onChange={e => {
                                                     const newStock = parseInt(e.target.value);
                                                     setVariants(prev => prev.map((v, i) => i === idx ? { ...v, stock: isNaN(newStock) ? 0 : newStock } : v));
@@ -190,7 +190,7 @@ export default function CreateProductPage() {
                                     <div className="flex flex-col gap-2">
                                         <label htmlFor={`variant-sku-${idx}`} className="font-medium text-sm">SKU</label>
                                         <input type="text" id={`variant-sku-${idx}`} placeholder="ABC-EDF" className="input-form" 
-                                            value={variant.sku} defaultValue={""} 
+                                            value={variant.sku} 
                                             onChange={e => {
                                                 const newSku = e.target.value;
                                                 setVariants(prev => prev.map((v, i) => i === idx ? { ...v, sku: newSku } : v));
@@ -227,10 +227,10 @@ export default function CreateProductPage() {
                             images.map((image, idx) => (
                                 <div key={idx} className="flex flex-col w-full gap-4 items-center">
                                     <div className="flex gap-2 h-full w-full">
-                                        <Image src={image.url || "/placeholder.png"} alt={image.alt || "Imagen del producto"} width={128} height={128} className="object-cover rounded-md border" />
+                                        <Image src={image.url || "/placeholder.jpg"} alt={image.alt || "Imagen del producto"} width={128} height={128} className="object-cover rounded-md border" />
                                         <div className="flex flex-col w-full items-center justify-between">
-                                            <input type="text" id={`image-url-${idx}`} placeholder="https://ejemplo.com/imagen.jpg" className="input-form"
-                                                value={image.url} defaultValue={""}
+                                            <input type="text" id={`image-url-${idx}`} placeholder={image.alt ? image.alt : "https://ejemplo.com/imagen.jpg"} className="input-form"
+                                                value={image.url}
                                                 onChange={e => {
                                                     const newUrl = e.target.value;
                                                     setImages(prev => prev.map((img, i) => i === idx ? { ...img, url: newUrl } : img));
@@ -238,7 +238,7 @@ export default function CreateProductPage() {
                                             />
 
                                             <input type="text" id={`image-alt-${idx}`} placeholder="Texto alternativo" className="input-form"
-                                                value={image.alt} defaultValue={""}
+                                                value={image.alt}
                                                 onChange={e => {
                                                     const newAlt = e.target.value;
                                                     setImages(prev => prev.map((img, i) => i === idx ? { ...img, alt: newAlt } : img));
@@ -250,7 +250,7 @@ export default function CreateProductPage() {
 
                                     <div className="flex  gap-2 w-full">
                                         <input type="text" id={`image-color-${idx}`} placeholder="Color (ej: Rojo)" className="input-form" 
-                                            value={image.color_id} defaultValue={""}
+                                            value={image.color_id}
                                             onChange={e => {
                                                 const newColorId = e.target.value;
                                                 setImages(prev => prev.map((img, i) => i === idx ? { ...img, color_id: newColorId } : img));
