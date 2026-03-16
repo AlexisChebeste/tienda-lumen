@@ -8,8 +8,7 @@ import { useRef } from "react";
 export default function QueryFilter() {
     const router = useRouter()
     const searchParams = useSearchParams()
-
-    const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     const handleChange = (value: string) => {
         if (debounceTimeoutRef.current) {
@@ -19,8 +18,15 @@ export default function QueryFilter() {
         debounceTimeoutRef.current = setTimeout(() => {
         
             const params = new URLSearchParams(searchParams.toString())
-            params.set("search_query", value)
-            router.push(`?${params.toString()}`)
+
+            if (value) {
+                params.set("search_query", value)
+            } else {
+                params.delete("search_query")
+            }
+
+            params.set("page", "1") // reset page
+            router.replace(`?${params.toString()}`)
         }, 300);
 
     }
@@ -33,6 +39,7 @@ export default function QueryFilter() {
                 placeholder="Buscar por nombre o slug"
                 className="border p-2 pl-8 w-full bg-white placeholder:text-slate-400 text-slate-700 text-sm border-slate-200 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md rounded-xl"
                 onChange={(e) => handleChange(e.target.value)}
+                defaultValue={searchParams.get("search_query") || ""}
             />
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
         </div>

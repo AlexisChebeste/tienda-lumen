@@ -1,4 +1,5 @@
 import { CatalogProduct } from "@/domain/catalog.types";
+import { getProductMeta } from "@/services/product.service";
 import { Edit, Trash2 } from "lucide-react";
 import Image from "next/image";
 
@@ -8,11 +9,10 @@ export default function CardsProducts({products} : {products: CatalogProduct[]})
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:hidden">
       {products?.map((product: CatalogProduct) => {
         const mainImage = product.images.find((img) => img.isMain) || product.images[0]
-        const totalStock = product.variants.reduce((sum, v) => sum + v.stock, 0)
-        const uniqueColors = [...new Set(product.variants.map(v => v.color.id))]
+        const { totalStock, uniqueColors } = getProductMeta(product)
 
         return(
-          <div key={product.slug} className="border rounded-[6px] p-4 flex flex-col gap-2">
+          <div key={product.id} className="border rounded-[6px] p-4 flex flex-col gap-2">
             {/* Imagen del producto con indicador de stock y cantidad de colores */}
             <div className="relative w-full aspect-square ">
               {uniqueColors.length > 1 && (
@@ -60,11 +60,11 @@ export default function CardsProducts({products} : {products: CatalogProduct[]})
             </div>
 
             <div className="flex justify-between items-center w-full gap-4 mt-2 font-semibold text-sm">
-              <button className="text-sm text-blue-500 hover:underline border w-full py-2 rounded-xl border-blue-500 bg-blue-100">
+              <button className="text-sm text-blue-500 hover:underline border w-full py-2 rounded-xl border-blue-500 bg-blue-100 cursor-pointer">
                 <Edit className="inline-block mr-2" size={16} />
                 Editar
               </button>
-              <button className="text-sm text-red-500 hover:underline border w-full py-2 rounded-xl border-red-500 bg-red-100">
+              <button className="text-sm text-red-500 hover:underline border w-full py-2 rounded-xl border-red-500 bg-red-100 cursor-pointer">
                 <Trash2 className="inline-block mr-2" size={16} />
                 Eliminar
               </button>

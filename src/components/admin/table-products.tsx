@@ -1,4 +1,5 @@
 import { CatalogProduct } from "@/domain/catalog.types";
+import { getProductMeta } from "@/services/product.service";
 import { ImagePlus, Pencil, Trash2 } from "lucide-react";
 import Image from "next/image"
 
@@ -17,15 +18,22 @@ export default function TableProducts({products} : {products: CatalogProduct[]})
           </tr>
         </thead>
         <tbody className="text-stone-600 divide-y">
-          {products?.map((product: CatalogProduct) => {
+          {products.length === 0 ? (
+            <tr>
+              <td colSpan={7} className="text-center py-10 text-sm text-muted-foreground">
+                No se encontraron productos.
+              </td>
+            </tr>
+          ) : (
+          
+          products?.map((product: CatalogProduct) => {
             
             const mainImage = product.images.find((img) => img.isMain) || product.images[0]
-            const totalStock = product.variants.reduce((sum, v) => sum + v.stock, 0)
-            const uniqueColors = [...new Set(product.variants.map(v => v.color.id))]
+            const { totalStock, uniqueColors } = getProductMeta(product)
 
             return(
-              <tr key={product.slug} className="border-t hover:bg-muted/30">
-                <td className="px-4  py-2.5 table-cell">
+              <tr key={product.id} className="border-t hover:bg-muted/30">
+                <td className="px-4  py-2.5 table-cell h-24">
                   <div className="flex items-center gap-3">
                     <div className="h-14 w-14 overflow-hidden rounded-lg bg-muted">
                       {mainImage ? (
@@ -99,7 +107,7 @@ export default function TableProducts({products} : {products: CatalogProduct[]})
                 </td>
               </tr>
             )
-          })}
+          }))}
         </tbody>
 
       </table>

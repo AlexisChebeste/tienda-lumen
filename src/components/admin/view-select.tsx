@@ -8,7 +8,13 @@ export function ViewSelect() {
 
   const handleChange = (value: string) => {
     const params = new URLSearchParams(searchParams.toString())
-    params.set("limit", value)
+      if (value) {
+      params.set("limit", value)
+    } else {
+      params.delete("limit")
+    }
+
+    params.set("page", "1") // reset page
     router.push(`?${params.toString()}`)
   }
 

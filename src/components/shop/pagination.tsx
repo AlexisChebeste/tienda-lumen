@@ -15,10 +15,11 @@ export default function Pagination({
 
     const updateUrl = (newParams: { page?: number }) => {
         const params = new URLSearchParams(searchParams.toString())
+
         if (newParams.page) {
             params.set("page", newParams.page.toString())
-        }
-        router.push(`/tienda?${params.toString()}`)
+        } 
+        router.replace(`?${params.toString()}`)
     }
 
     return (

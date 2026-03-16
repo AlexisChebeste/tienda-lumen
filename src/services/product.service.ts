@@ -1,4 +1,4 @@
-import { ProductVariant } from "@/domain/catalog.types";
+import { CatalogProduct, ProductVariant } from "@/domain/catalog.types";
 import { Color } from "@/domain/colors";
 import { supabase } from "@/lib/supabase/client";
 
@@ -39,4 +39,12 @@ export async function getProductImagesAll() {
         return [];
     }
     return data;
+}
+
+export function getProductMeta(product: CatalogProduct) {
+  const totalStock = product.variants.reduce((sum, v) => sum + v.stock, 0)
+
+  const uniqueColors = [...new Set(product.variants.map(v => v.color.id))]
+
+  return { totalStock, uniqueColors }
 }
