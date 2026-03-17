@@ -3,11 +3,13 @@
 import { useEffect, useState } from "react"
 import { getCategories } from "@/services/filter.service"
 import { Category } from "@/domain/categories"
+import { useFormContext } from "react-hook-form";
 
 export default function CategoryNew() {
 
+  const {register} = useFormContext();
+
   const [categories, setCategories] = useState<Category[]>([])
-  const [categoryId, setCategoryId] = useState("")
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -20,9 +22,7 @@ export default function CategoryNew() {
 
   return (
     <select
-      name="category_id"
-      value={categoryId}
-      onChange={(e) => setCategoryId(e.target.value)}
+      {...register("category_id")}
       className="input-form cursor-pointer appearance-none pr-8 bg-no-repeat bg-right"
       style={{
         backgroundImage:
