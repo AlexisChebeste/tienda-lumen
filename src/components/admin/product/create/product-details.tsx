@@ -16,7 +16,7 @@ export default function ProductDetails() {
     const addDetail = () => {
         if (!inputValue.trim()) return
 
-        append({ value: inputValue.trim() })
+        append({ value: inputValue })
         setInputValue("")
     }
     

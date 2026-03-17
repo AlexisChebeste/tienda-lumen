@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Geist } from "next/font/google";
 import "./globals.css";
-import { CartProvider } from "@/lib/card-context";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
+import { Toaster } from "sonner"
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -33,6 +31,7 @@ export default function RootLayout({
         className={`${inter.variable} ${cormorant.variable} font-sans antialiased min-h-screen flex flex-col h-full`}
       >
         {children}
+        <Toaster richColors  position="top-right"/>
       </body>
     </html>
   );

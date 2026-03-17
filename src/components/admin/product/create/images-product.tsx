@@ -55,7 +55,7 @@ export default function ImagesProduct({ colors }: { colors: Color[] }) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 p-4 border border-dashed gap-4 min-h-32 place-items-center  rounded-lg">
             {fields.length === 0 ? (
-                    <p className="text-center text-gray-500 lg:col-span-2">No hay imágenes. Agrega al menos una imagen principal.</p>
+                    <p className="text-center text-gray-500 col-span-full">No hay imágenes. Agrega al menos una imagen principal.</p>
                 ) : (
                     fields.map((image, idx) => (
                         <div key={image.id} className="flex flex-col w-full gap-4 items-center">

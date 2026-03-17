@@ -95,9 +95,9 @@ export default function VariantsProduct({ colors }: { colors: Color[] }) {
                 ) }
             </div>
 
-            {errors.variants && (
+            {(errors.variants)   && (
                 <p className="text-red-600 text-sm mt-1">
-                    {typeof errors.variants.message === "string" ? errors.variants.message :  "Completar las variantes"}
+                    {typeof errors.variants.message === "string" ? errors.variants.message : typeof errors.variants?.root?.message === "string" ? errors.variants.root.message : "Hay errores en las variantes. Revisa cada una para más detalles."}
                 </p>
             )}
         </section>

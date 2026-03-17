@@ -3,7 +3,7 @@ import { z } from "zod"
 export const productSchema = z.object({
   name: z.string().min(3, "El nombre es obligatorio"),
   slug: z.string().min(3 , "El slug es obligatorio"),
-   description: z.string().optional(),
+  description: z.string().optional(),
 
   base_price: z
     .number()
@@ -32,13 +32,19 @@ export const productSchema = z.object({
 
   images: z.array(
     z.object({
-      productId: z.string().optional(),
       url: z.string().min(1, "La URL de la imagen es obligatoria"),
       alt: z.string().min(1, "El texto alternativo es obligatorio"),
       color_id: z.string().min(1, "El color es obligatorio"),
+      position: z.number().min(0, "La posición debe ser un número positivo"),
       is_main: z.boolean()
     })
   ).min(1, "Debes agregar al menos una imagen")
+}).refine((data) => {
+  const mainImages = data.images.filter(img => img.is_main)
+  return mainImages.length === 1
+}, {
+  message: "Debe haber exactamente una imagen principal",
+  path: ["images"]
 })
 
 export type ProductForm = z.infer<typeof productSchema>
