@@ -84,6 +84,7 @@ export default function ImagesProduct({ colors }: { colors: Color[] }) {
                             </div>
 
                             <div className="flex  gap-2 w-full">
+                                {/* <label htmlFor={`images.${idx}.color_id`} className="font-medium text-sm">Color</label> */}
                                 <SelectColor
                                     colors={colors}
                                     name={`images.${idx}.color_id`}

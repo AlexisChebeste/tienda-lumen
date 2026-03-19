@@ -6,7 +6,10 @@ import ProductDetails from "./product-details";
 
 export default function InfoProduct() {
 
-    const {register, formState: { errors }} = useFormContext();
+    const {register, formState: { errors },watch} = useFormContext();
+
+    const watchIsPopular = watch("is_popular", false);
+
 
     return (
         <section className="flex flex-col gap-4 max-w-4xl mx-auto w-full">
@@ -77,11 +80,10 @@ export default function InfoProduct() {
 
                 {/*Producto destacado */}
                 <div className="flex gap-2">
-                    <label htmlFor="isMain" className="flex items-center gap-2 text-sm">
+                    <label htmlFor="is_popular" className="flex items-center gap-2 text-sm">
                         <input
                             type="checkbox"
                             {...register("is_popular")}
-                            id="isMain"
                             className="size-4 rounded-lg accent-black cursor-pointer checked:rounded-md"
                         />
                         Marcar producto como destacado

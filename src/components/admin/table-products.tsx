@@ -2,6 +2,8 @@ import { CatalogProduct } from "@/domain/catalog.types";
 import { getProductMeta } from "@/services/product.service";
 import { ImagePlus, Pencil, Trash2 } from "lucide-react";
 import Image from "next/image"
+import Link from "next/link";
+import DeleteButton from "./product/delete-button";
 
 export default function TableProducts({products} : {products: CatalogProduct[]}) {
   return (
@@ -92,17 +94,13 @@ export default function TableProducts({products} : {products: CatalogProduct[]})
                   </span>
                 </td>
                 <td className="px-4 py-2.5 table-cell text-right">
-                  <div className="flex justify-center gap-4">
-                    <button  /* onClick={() => openEditModal(product)} */
-                      className="cursor-pointer"
+                  <div className="flex items-center justify-center gap-4">
+                    <Link href={`/admin/products/${product.id}/edit`}  
+                      className="cursor-pointer p-1 rounded-full text-black hover:text-blue-500 hover:bg-sky-100 transition-colors "
                     >
-                      <Pencil className="h-4 w-4 text-black" />
-                    </button>
-                    <button  /* onClick={() => handleDelete(product.id)} */
-                      className="cursor-pointer"
-                    >
-                      <Trash2 className="h-4 w-4 text-black" />
-                    </button>
+                      <Pencil className="h-4 w-4 " />
+                    </Link>
+                    <DeleteButton id={product.id} name={product.name} className="p-1 rounded-full text-black hover:text-red-600 hover:bg-red-100 transition-colors "/>
                   </div>
                 </td>
               </tr>

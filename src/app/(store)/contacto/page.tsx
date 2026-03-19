@@ -1,7 +1,7 @@
 
 export default function ContactoPage() {
     return (
-      <div className="flex p-6 lg:py-32  bg-background flex-col ">
+      <div className="flex flex-1 p-6 lg:py-32  bg-background flex-col ">
         <main className="flex-1 flex flex-col max-w-7xl mx-auto w-full p-6 gap-6 items-start justify-center h-full relative ">
             <div className="text-center m-auto">
                 <h1 className="font-serif text-3xl font-light tracking-wide">Contacto</h1>

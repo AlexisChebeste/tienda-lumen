@@ -81,7 +81,7 @@ export default function CartSidebar ({isOpen, onClose} : CartSidebarProps) {
                                                         <div className=" px-3.5 py-0.5 border-t border-b flex items-center justify-center text-sm">{item.quantity}</div>
                                                         <button onClick={() => updateQuantity(item.id, item.quantity +1)} className={`px-2 py-0.5 border border-l-0 flex items-center justify-center transition-colors duration-200 ${item.quantity >= item.stock ? ' cursor-not-allowed' : 'cursor-pointer hover:bg-gray-200'}`} title={item.quantity >= (item.stock ?? 0) ? "Máxima cantidad alcanzada" : undefined}>+</button>
                                                     </div>
-                                                    <p>$ {(item.price * item.quantity).toFixed(2)}</p>
+                                                    <p>$ {(item.price * item.quantity)}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -98,7 +98,7 @@ export default function CartSidebar ({isOpen, onClose} : CartSidebarProps) {
                         <div className=" flex flex-col gap-4 border-t border-border px-6 py-5">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-md font-medium tracking-wider uppercase">Subtotal</h2>
-                                <p className="text-lg font-semibold">$ {totalPrice.toFixed(2)} </p>
+                                <p className="text-lg font-semibold">$ {totalPrice} </p>
                             </div>
 
                             <p className="text-sm text-stone-700">Envío gratis en compras mayores a $100.000</p>

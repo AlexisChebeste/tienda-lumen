@@ -52,24 +52,24 @@ export default function ProductPage() {
     }
 
     return (
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 h-full p-5 lg:py-10 ">
 
-            <main className="flex-1 flex flex-col max-w-7xl mx-auto w-full px-6 h-full">
+            <main className="max-w-7xl mx-auto w-full  h-full">
                 {loading ? (
-                    <div className="flex-1 flex items-center justify-center h-full">
-                        <div className="flex flex-col items-center gap-3 text-gray-500">
+                    <div className="flex items-center justify-center min-h-[50vh]">
+                        <div className="flex flex-col items-center gap-3 text-gray-500 h-full justify-center">
                             <Loader2 className="h-8 w-8 animate-spin" />
                             <p className="text-sm">Cargando producto...</p>
                         </div>
                     </div>
                 ) : product && (
-                    <>
-                        <section className="mx-auto py-5 lg:py-10 grid grid-cols-1 gap-6 lg:gap-10 lg:grid-cols-2">
+                    <div className="flex flex-col items-center gap-4 mb-6">
+                        <section className="mx-auto grid grid-cols-1 gap-6 lg:gap-10 lg:grid-cols-2 w-full" >
                             <ProductGallery images={product.images} selectImage={selectImage} setSelectImage={setSelectImage} />
-                            <div className="flex flex-col gap-2 min-h-full max-w-lg">
+                            <div className="flex flex-col gap-2 min-h-full ">
                                 <div className="flex flex-col gap-1">
                                     <h1 className="font-serif text-4xl font-light tracking-tight ">{product.name}</h1>
-                                    <p className="text-2xl font-medium text-gray-600">${product.basePrice.toFixed(2)}</p>
+                                    <p className="text-2xl font-medium text-gray-600">${product.basePrice}</p>
                                     <p className="text-base text-muted-foreground">{product.description}</p>
                                 </div>
                                 <ProductInfo product={product} setSelectImage={setSelectImage} />
@@ -83,7 +83,7 @@ export default function ProductPage() {
                                 ))}
                             </ul>
                         </section>
-                    </>
+                    </div>
                     )}
             </main>
 

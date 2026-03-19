@@ -5,11 +5,14 @@ import { Color } from "@/domain/colors";
 
 export default function SelectColor({colors, name, isVariant = false}: {colors: Color[], name: string, isVariant?: boolean}) {
 
-  const {register} = useFormContext();
+  const {register, watch} = useFormContext();
+
+  const valueColor = watch(name)
 
   return (
     <select
       {...register(name)}
+      value={valueColor || ""}
       className="input-form cursor-pointer appearance-none pr-8 bg-no-repeat bg-right"
       style={{
         backgroundImage:

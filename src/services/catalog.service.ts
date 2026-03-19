@@ -1,7 +1,7 @@
 
 import { CatalogProduct } from "@/domain/catalog.types";
-import { Product } from "@/domain/products";
 import { supabase } from "@/lib/supabase/client";
+import { UUID } from "crypto";
 
 export interface QueryPaginationDto {
   page?: number;
@@ -109,5 +109,18 @@ export async function searchProducts(query: string) {
   })
 
   return data
+}
+
+export async function getProductById(id: UUID): Promise<CatalogProduct | undefined> {
+  const { data, error } = await supabase.rpc("get_product_by_id", {
+    product_id: id
+  })
+
+  if (error) {
+    console.error("RPC Error:", error);
+    return undefined;
+  }
+
+  return data;
 }
   

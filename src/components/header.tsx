@@ -25,8 +25,8 @@ export default function Header() {
     useClickOutside(mobileMenuRef, () => setIsMobileMenuOpen(false))
 
     return (
-        <>
-            <header className="sticky top-0 z-30 w-full border-b border-border bg-background/90 backdrop-blur-sm">
+        <header className="sticky top-0 z-50 flex flex-col">
+            <section className="top-0 z-40 w-full border-b border-border bg-background/90 backdrop-blur-sm">
                 <div className="container flex h-20 items-center justify-between px-6 mx-auto max-w-7xl">
 
                     <button className="md:hidden flex items-center p-2 text-sm font-medium hover:underline hover:bg-black/15 transition rounded-full" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
@@ -60,10 +60,10 @@ export default function Header() {
                             <Search className="h-5 w-5" />
                         </button>
 
-                        <button className="hidden md:flex items-center p-2 text-sm font-medium hover:underline hover:bg-black/15 transition rounded-full">
+                        <Link href="/admin" className="hidden md:flex items-center p-2 text-sm font-medium hover:underline hover:bg-black/15 transition rounded-full">
                             <User className="h-5 w-5" />
                             <span className="sr-only">Cuenta</span>
-                        </button>
+                        </Link>
                         <button onClick={() => setIsCartOpen(true)} className="flex items-center p-2 text-sm font-medium hover:underline hover:bg-black/15 transition rounded-full relative">
                             <ShoppingBag className="h-5 w-5" />
                             {totalItems > 0 && (
@@ -77,7 +77,7 @@ export default function Header() {
                 </div>
 
 
-            </header>
+            </section>
 
             <div
                 className={`md:hidden absolute top-20 left-0 z-20 bg-white w-full font-medium text-neutral-600 border-b border-border shadow-sm
@@ -107,10 +107,10 @@ export default function Header() {
                         <Search className="h-5 w-5" />
                         <span >Buscar</span>
                     </button>
-                    <button className="flex items-center p-3 gap-2 text-sm font-medium hover:underline hover:bg-black/15 transition w-full text-center justify-center">
+                    <Link href="/admin" className="flex items-center p-3 gap-2 text-sm font-medium hover:underline hover:bg-black/15 transition w-full text-center justify-center">
                         <User className="h-5 w-5" />
                         <span >Cuenta</span>
-                    </button>
+                    </Link>
 
                 </div>
             </div>
@@ -128,6 +128,6 @@ export default function Header() {
             </div>
 
             <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
-        </>
+        </header>
     );
 }

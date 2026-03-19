@@ -10,11 +10,15 @@ export default function StoreLayout({
         
     return (
         <CartProvider>
-            <Header />
-            
-            {children}
+            <div className="flex flex-col min-h-screen">
+                <Header />
 
-            <Footer />
+                <main className="flex-1">
+                    {children}
+                </main>
+
+                <Footer />
+            </div>
         </CartProvider>
     )
 }

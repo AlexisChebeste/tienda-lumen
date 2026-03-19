@@ -21,6 +21,7 @@ export interface CatalogProduct {
     color: Color;
     size: Size;
   }[];
+  is_popular: boolean;
 }
 
 export interface ProductVariant {

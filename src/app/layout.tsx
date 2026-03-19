@@ -28,7 +28,7 @@ export default function RootLayout({
     <html lang="es" data-scroll="smooth">
       <body 
         suppressHydrationWarning
-        className={`${inter.variable} ${cormorant.variable} font-sans antialiased min-h-screen flex flex-col h-full`}
+        className={`${inter.variable} ${cormorant.variable} font-sans antialiased min-h-screen flex flex-col h-full `}
       >
         {children}
         <Toaster richColors  position="top-right"/>
