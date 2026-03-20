@@ -75,9 +75,10 @@ export type ProductPopularType = {
 
 export async function getProductsPopular(): Promise<ProductPopularType[] | undefined> {
   const { data, error } = await supabase.rpc("get_popular_products", {
-    limit_count: 8
+    limit_count: 3
   })
-
+  
+  console.log("Popular Products Data:", data);
   if (error) {
     console.error("RPC Error:", error);
     return undefined;

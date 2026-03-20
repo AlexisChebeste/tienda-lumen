@@ -1,6 +1,5 @@
 import { CatalogProduct } from "@/domain/catalog.types";
 import ProductCard from "../product-card";
-import FilterSection from "./filter-section";
 import FilterSectionMobile from "./filter-section-mobile";
 import { SortSelect } from "./sort-select";
 import { Suspense } from "react";
@@ -32,9 +31,6 @@ export default async function ShopView({
         <main className="flex-1 grid grid-cols-1 lg:grid-cols-5 max-w-7xl mx-auto w-full p-4 gap-6 items-start h-full">
 
           <Suspense fallback={<div className="p-4">Cargando filtros...</div>}>
-              <FilterSection maxPrice={maxPrice} />
-          </Suspense>
-          <Suspense fallback={null}>
               <FilterSectionMobile maxPrice={maxPrice} />
           </Suspense>
         
