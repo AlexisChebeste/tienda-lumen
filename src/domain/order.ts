@@ -1,3 +1,4 @@
+import { CartItem } from "@/lib/card-context"
 import { UUID } from "crypto"
 
 
@@ -102,4 +103,34 @@ export interface orderItemsComplete {
   price: number
   quantity: number
   image: string
+}
+
+
+export interface CreateOrder {
+  customer : {
+    nombre: string
+    email: string
+    telefono: {
+      codigo_pais: string
+      numero: string
+      codigo_area: string
+    }
+  }
+  direccion: {
+    calle: string
+    numero: string
+    provincia: string
+    codigo_postal: string
+  }
+  items: CartItem[]
+  subtotal: number
+  shipping: {
+    method: string
+    price: number
+  }
+  total: number
+  payment: {
+    method: PaymentMethod
+    status: PaymentStatus
+  }
 }
