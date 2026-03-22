@@ -78,7 +78,6 @@ export async function getProductsPopular(): Promise<ProductPopularType[] | undef
     limit_count: 3
   })
   
-  console.log("Popular Products Data:", data);
   if (error) {
     console.error("RPC Error:", error);
     return undefined;

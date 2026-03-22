@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useRef } from "react";
 
 
-export default function QueryFilter() {
+export default function QueryFilter({placholder = "Buscar por nombre o slug"}: {placholder?: string}) {
     const router = useRouter()
     const searchParams = useSearchParams()
     const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -36,7 +36,7 @@ export default function QueryFilter() {
 
             <input
                 type="text"
-                placeholder="Buscar por nombre o slug"
+                placeholder={placholder}
                 className="border p-2 pl-8 w-full bg-white placeholder:text-slate-400 text-slate-700 text-sm border-slate-200 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md rounded-xl"
                 onChange={(e) => handleChange(e.target.value)}
                 defaultValue={searchParams.get("search_query") || ""}

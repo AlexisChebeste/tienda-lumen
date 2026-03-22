@@ -1,44 +1,105 @@
-import { CartItem } from "@/lib/card-context"
+import { UUID } from "crypto"
 
-export type Telefono = {
-    codigo_pais: string
-    numero: string
-    codigo_area: string
+
+export interface OrderItem {
+  id: string
+  productId: string
+  variantId: string
+  productName: string
+  sku: string
+  color: string
+  size: string
+  price: number
+  quantity: number
+  image: string
 }
 
-export type Direccion = {
-    calle: string
-    numero: string
-    provincia: string
-    codigo_postal: string
+export interface OrderAddress {
+  id: string
+  street: string
+  number: string
+  province: string
+  postal_code: string
 }
 
-export type Order = {
-    id: string
-    items: CartItem[]
-    subtotal: number
-    shipping: {
-        method: "standard" | "express"
-        price: number
-    }
-    total: number
+export interface Order {
+  id: string
+  orderNumber: number
+  createdAt: string
 
-    customer: {
-        nombre: string
-        email: string
-        telefono: Telefono
-    }
+  customerName: string
+  customerEmail: string
+  customerPhone: string
 
-    direccion: Direccion
+  status: string
+  paymentStatus: PaymentStatus
+  paymentMethod: PaymentMethod
 
-    payment: {
-        method: "card"
-        status: "pending" | "paid" | "failed"
-    }
+  subtotal: number
+  shippingMethod: string
+  shippingTotal: number
+  total: number
 
-    status: "pending" | "processing" | "shipped" | "delivered"
-
-    createdAt: Date
+  address: OrderAddress[] | null
+  items: OrderItem[]
 }
 
-export type CreateOrder = Omit<Order, "id" | "createdAt" | "status">
+export interface GetOrdersResponse {
+  data: Order[]
+  total: number
+  page: number
+  limit: number
+}
+
+export type OrderStatus = 
+  | "pending"
+  | "paid"
+  | "shipped"
+  | "cancelled"
+
+export type PaymentStatus =
+  | "pending"
+  | "paid"
+  | "failed"
+
+export type PaymentMethod =
+  | "card"
+  | "cash"
+  | "transfer"
+
+
+export interface OrderView {
+  id: UUID
+  order_number: number
+  created_at: string
+
+  customer_name: string
+  customer_email: string
+  customer_phone: string
+
+  status: string
+  payment_status: PaymentStatus
+  payment_method: PaymentMethod
+
+  subtotal: number
+  shipping_method: string
+  shipping_total: number
+  total: number
+
+  order_addresses: OrderAddress[]
+  order_items: orderItemsComplete[]
+}
+
+export interface orderItemsComplete {
+  id: string
+  product_id: string
+  variant_id: string
+  product_name: string
+  order_id: string
+  sku: string
+  color_name: string
+  size: string
+  price: number
+  quantity: number
+  image: string
+}

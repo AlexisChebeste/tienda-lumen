@@ -1,6 +1,4 @@
 
-
-import { Props } from "@/app/admin/products/page";
 import CardsProducts from "@/components/admin/cards-products";
 import TableProducts from "@/components/admin/table-products";
 import { ViewSelect } from "@/components/admin/view-select";

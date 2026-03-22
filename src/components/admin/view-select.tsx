@@ -15,7 +15,7 @@ export function ViewSelect() {
     }
 
     params.set("page", "1") // reset page
-    router.push(`?${params.toString()}`)
+    router.replace(`?${params.toString()}`)
   }
 
   return (
