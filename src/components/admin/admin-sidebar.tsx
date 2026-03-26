@@ -1,15 +1,17 @@
 "use client"
 
+import useClickOutside from "@/lib/useClickOutside";
 import { ArrowBigLeft, LayoutDashboard, Menu, Package, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useEffect } from "react"
 
 export default function AdminSidebar() {
     const pathname = usePathname();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+    const mobileMenuRef = useRef(null)
+    useClickOutside(mobileMenuRef, () => setIsMenuOpen(false))
 
     const navLinks = [
         { name: 'Dashboard', href: '/admin', icon: <LayoutDashboard size={18} /> },
@@ -55,7 +57,7 @@ export default function AdminSidebar() {
 
     return (
         <header className="sticky top-0 z-50 flex flex-col">
-            <div className="flex lg:hidden h-16 z-40 top-0 left-0 bg-white items-center justify-between px-6 border-b border-gray-300">
+            <div className="flex lg:hidden h-16 z-40 top-0 left-0 bg-white items-center justify-between px-3 md:p-6 border-b border-gray-300">
                 <Link href="/admin" className="flex items-center p-2">
                     <h2 className="font-serif text-2xl text-gray-800 font-light tracking-wide">LUMEN</h2>
                 </Link>
@@ -65,7 +67,7 @@ export default function AdminSidebar() {
                 </button>
             </div>
 
-            <nav className={`lg:hidden fixed top-16 left-0 w-full bg-white z-30 transition-transform duration-300 ${isMenuOpen ? 'translate-y-0' : '-translate-y-full'} border-b border-gray-300`}>
+            <nav className={`lg:hidden fixed top-16 left-0 w-full bg-white z-30 transition-transform duration-300 ${isMenuOpen ? 'translate-y-0' : '-translate-y-full'} border-b border-gray-300`} ref={mobileMenuRef}>
                 <ul className="flex flex-col gap-2 px-8 py-4">
                     <NavItems />
                     <li className="pt-2 border-t">
@@ -99,6 +101,7 @@ export default function AdminSidebar() {
                     </Link>
                 </section>
             </div>
+
 
         </header>
     );

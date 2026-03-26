@@ -190,3 +190,7 @@ html{
   background-color: var(--color-secondary-foreground);
   color: var(--color-secondary);
 }
+
+.card-container{
+  @apply bg-white p-4  rounded-xl flex flex-col gap-4 shadow border border-gray-200
+}
