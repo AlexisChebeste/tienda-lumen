@@ -14,18 +14,13 @@ export default function Footer() {
                         <h3 className="text-lg font-medium mb-4 tracking-wider uppercase">About</h3>
                         <ul className="space-y-4">
                             <li>
-                                <Link href="/shop" className="text-sm text-muted-foreground hover:text-foreground transition-colors ">
-                                Nuestra Historia
+                                <Link href="/nosotros" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                                    Nuestra historia
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                                Sostenibilidad
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                                Carreras
+                                <Link href="/contacto" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                                    Contacto
                                 </Link>
                             </li>
                         </ul>
@@ -36,18 +31,18 @@ export default function Footer() {
                         <h3 className="text-lg font-medium mb-4 tracking-wider uppercase">TIENDA</h3>
                         <ul className="space-y-2">
                             <li>
-                                <Link href="/shop" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                                Hombre
+                                <Link href="/tienda" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                                    Hombre
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                                Mujer
+                                <Link href="/tienda" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                                    Mujer
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                                Accessorios
+                                <Link href="/tienda" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                                    Accessorios
                                 </Link>
                             </li>
                         </ul>

@@ -1,5 +1,4 @@
 import ProductPopular from "@/components/product-popular";
-import { CatalogProduct } from "@/domain/catalog.types";
 import { getProductsPopular, ProductPopularType } from "@/services/catalog.service";
 import Link from "next/link";
 
@@ -51,14 +50,14 @@ export default async function Home() {
         </section>
         {/*Brand Identity */}
         <section className="bg-secondary px-6 py-24 md:py-32">
-          <div className="mx-auto max-w-2xl text-center">
+          <div className="mx-auto max-w-2xl text-center flex flex-col items-center gap-6">
             <h2 className="font-serif text-4xl font-light tracking-tight md:text-5xl ">Nuestra Filosofía</h2>
             <p className="mt-8 text-lg leading-relaxed text-muted-foreground">
               LUMEN trae esenciales cuidadosamente diseñados que trascienden las tendencias. Cada pieza está elaborada con intención para el minimalista moderno que valora la calidad, la sostenibilidad y el estilo atemporal.
             </p>
-            <button className="mt-10 px-12 py-4 border border-primary  text-black hover:bg-black hover:text-white transition-colors duration-300 ease-in-out tracking-widest uppercase bg-transparent text-sm">
-              <Link href="/nosotros">Saber más</Link>
-            </button>
+            <Link href="/nosotros"className="mt-8 px-12 py-4 border border-primary  text-black hover:bg-black hover:text-white transition-colors duration-300 ease-in-out tracking-widest uppercase bg-transparent text-sm cursor-pointer">
+             Saber más
+            </Link>
           </div>
         </section>
       </main>
